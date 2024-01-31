@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <!-- Page Title  -->
-    <title>Carval | {{ $title }}</title>
+    <title>Sriwijaya Medical Assistance | {{ $title }}</title>
     <!-- StyleSheets  -->
     <link rel="stylesheet" href=" {{ asset('/assets/css/dashlite.css?ver=3.0.3') }}">
     <link id="skin-default" rel="stylesheet" href="{{ asset('assets/css/theme.css?ver=3.0.3') }} ">
