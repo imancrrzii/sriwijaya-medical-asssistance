@@ -130,8 +130,8 @@
                                         </button>
                                         @can('admin-monitoring-all')
                                         <a href="#" onclick="printPatient('{{ $patient->id }}')"
-                                            class="btn btn-success btn-xs rounded-pill">
-                                            <em class="ni ni-printer"></em>
+                                            class="btn btn-primary btn-xs rounded-pill btn-dim">
+                                            <em class="icon ni ni-printer-fill"></em>
                                         </a>
                                         @endcan
                                     </td>
