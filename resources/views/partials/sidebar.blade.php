@@ -2,11 +2,11 @@
     <div class="nk-sidebar-element nk-sidebar-head">
         <div class="nk-sidebar-brand">
             <a href="" class="logo-link nk-sidebar-logo">
-                <img class="logo-light logo-img" src=""
+                <img class="logo-light logo-img" src="{{ asset('assets/images/TBMS.png') }}"
                     srcset="./images/logo2x.png 2x" alt="logo">
-                <img class="logo-dark logo-img" src=""
+                <img class="logo-dark logo-img" src="{{ asset('assets/images/TBMS.png') }}"
                     srcset="./images/logo-dark2x.png 2x" alt="logo-dark">
-                <img class="logo-small logo-img logo-img-small" src=""
+                <img class="logo-small logo-img logo-img-small" src="{{ asset('assets/images/TBMS.png') }}"
                     srcset="./images/logo-small2x.png 2x" alt="logo-small">
             </a>
         </div>
@@ -24,7 +24,7 @@
                     <li class="nk-menu-item">
                         <a href="" class="nk-menu-link">
                             <span class="nk-menu-icon"><em class="icon ni ni-dashboard"></em></span>
-                            <span class="nk-menu-text"></span>
+                            <span class="nk-menu-text">Dashboard</span>
                         </a>
                     </li>
                 </ul>

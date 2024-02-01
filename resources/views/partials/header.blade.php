@@ -7,9 +7,9 @@
             </div>
             <div class="nk-header-brand d-xl-none">
                 <a href="html/index.html" class="logo-link">
-                    <img class="logo-light logo-img" src=""
+                    <img class="logo-light logo-img" src="{{ asset('assets/images/TBMS.png') }}"
                         srcset="./images/logo2x.png 2x" alt="logo">
-                    <img class="logo-dark logo-img" src=""
+                    <img class="logo-dark logo-img" src="{{ asset('assets/images/TBMS.png') }}"
                         srcset="./images/logo-dark2x.png 2x" alt="logo-dark">
                 </a>
             </div>
@@ -22,7 +22,8 @@
                                     <em class="icon ni ni-user-alt"></em>
                                 </div>
                                 <div class="user-info d-none d-xl-block">
-                                    <div class="user-name dropdown-indicator"></div>
+                                    <div class="user-status user-status-role">{{ Auth::user()->role }}</div>
+                                    <div class="user-name dropdown-indicator">{{ Auth::user()->name }}</div>
                                 </div>
                             </div>
                         </a>
@@ -33,7 +34,8 @@
                                         <span class="icon ni ni-user-alt"></span>
                                     </div>
                                     <div class="user-info">
-                                        <span class="lead-text"></span>
+                                        <span class="lead-text">{{ Auth::user()->name }}</span>
+                                        <span class="sub-text">{{ Auth::user()->role }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -46,7 +48,7 @@
                             <div class="dropdown-inner">
                                 <ul class="link-list">
                                     <li>
-                                        <a href="">
+                                        <a href="{{ route('logout') }}">
                                             <em class="icon ni ni-signout"></em>
                                             <span>Logout</span>
                                         </a>

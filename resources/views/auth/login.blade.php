@@ -28,15 +28,15 @@
                                         </div>
                                     </div>
                                 </div>
-                                <form action="" method="POST">
+                                <form action="{{ route('login') }}" method="POST">
                                     @csrf
                                     <div class="form-group">
                                         <div class="form-label-group">
-                                            <label class="form-label" for="email">Username</label>
+                                            <label class="form-label" for="email">Email</label>
                                         </div>
                                         <div class="form-control-wrap">
-                                            <input type="text" class="form-control form-control-lg" id="email"
-                                                name="username" placeholder="Masukkan username anda">
+                                            <input type="email" class="form-control form-control-lg" id="email"
+                                                name="email" placeholder="Masukkan email anda">
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -48,6 +48,13 @@
                                             </a>
                                             <input type="password" class="form-control form-control-lg" id="password"
                                                 name="password" placeholder="Masukkan password anda">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="custom-control custom-control-sm custom-checkbox checked">
+                                            <input type="checkbox" class="custom-control-input" id="remember"
+                                                name="remember">
+                                            <label class="custom-control-label" for="remember">Ingat saya</label>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -66,6 +73,25 @@
     <script src="{{ asset('assets/js/bundle.js?ver=3.0.3') }}"></script>
     <script src="{{ asset('assets/js/scripts.js?ver=3.0.3') }}"></script>
     <script src="{{ asset('assets/js/example-toastr.js?ver=3.0.3') }}"></script>
+    <script>
+        $(document).ready(function() {
+            $("#btnSubmit").on("click", function() {
+                var $btn = $(this);
+                var $form = $btn.closest("form");
+                if ($form[0].checkValidity()) {
+                    $btn.addClass("disabled");
+
+                    var spinner = $("<span/>", {
+                        "class": "spinner-border spinner-border-sm",
+                        "role": "status",
+                        "aria-hidden": "true"
+                    });
+
+                    $btn.prepend(spinner);
+                }
+            });
+        });
+    </script>
     @if (session()->has('success'))
         <script>
             let message = @json(session('success'));
