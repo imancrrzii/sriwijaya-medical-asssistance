@@ -20,19 +20,38 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $tables = ['1', '2', '3', '4'];
-
-        foreach ($tables as $table) {
-            Gate::define("admin-table-$table", fn (User $user) => $user->role == "Admin Table $table");
-
-            Gate::define("admin-table-$table-monitoring-all", fn (User $user) => $user->role == "Admin Table $table" || $user->role == 'Admin Monitoring All');
-        }
-
-        Gate::define('admin-monitoring-all', fn (User $user) => $user->role == 'Admin Monitoring All');
-
-        Gate::define('admin-table', function (User $user) use ($tables) {
-            $tableRoles = array_map(fn ($table) => "Admin Table $table", $tables);
-            return in_array($user->role, $tableRoles);
+        Gate::define('admin-table-1', function (User $user) {
+            return $user->role == 'Admin Table 1';
+        });
+        Gate::define('admin-table-2', function (User $user) {
+            return $user->role == 'Admin Table 2';
+        });
+        Gate::define('admin-table-3', function (User $user) {
+            return $user->role == 'Admin Table 3';
+        });
+        Gate::define('admin-table-4', function (User $user) {
+            return $user->role == 'Admin Table 4';
+        });
+        Gate::define('admin-monitoring-all', function (User $user) {
+            return $user->role == 'Admin Monitoring All';
+        });
+        Gate::define('admin-table-1-monitoring-all', function (User $user) {
+            return $user->role == 'Admin Table 1' || $user->role == 'Admin Monitoring All';
+        });
+        Gate::define('admin-table-2-monitoring-all', function (User $user) {
+            return $user->role == 'Admin Table 2' || $user->role == 'Admin Monitoring All';
+        });
+        Gate::define('admin-table-3-monitoring-all', function (User $user) {
+            return $user->role == 'Admin Table 3' || $user->role == 'Admin Monitoring All';
+        });
+        Gate::define('admin-table-4-monitoring-all', function (User $user) {
+            return $user->role == 'Admin Table 4' || $user->role == 'Admin Monitoring All';
+        });
+        Gate::define('admin-table', function (User $user) {
+            return $user->role == 'Admin Table 1' || $user->role == 'Admin Table 2' || $user->role == 'Admin Table 3' || $user->role == 'Admin Table 4';
+        });
+        Gate::define('admin-table-monitoring-all', function (User $user) {
+            return $user->role == 'Admin Table 1' || $user->role == 'Admin Table 2' || $user->role == 'Admin Table 3' || $user->role == 'Admin Table 4' || $user->role == 'Admin Monitoring All';
         });
     }
 }

@@ -84,6 +84,15 @@ class PatientController extends Controller
 
         return back()->with('success', "Data berhasil dihapus");
     }
+
+    public function printPatient($id)
+    {
+        $title = "print";
+        $patient = Patient::findOrFail($id);
+
+        // Render tampilan pencetakan dan kirimkan data artikel
+        return view('patient.print', compact('patient', 'title'));
+    }
     public function getPatient($id)
     {
         $patient = Patient::find($id);

@@ -39,4 +39,16 @@ class DashboardController extends Controller
         return view('patient.index', compact('title', 'patients'));
     }
 
+    protected function getTableNumberFromRole($role)
+    {
+        $tableNumbers = [
+            'Admin Table 1' => 1,
+            'Admin Table 2' => 2,
+            'Admin Table 3' => 3,
+            'Admin Table 4' => 4,
+        ];
+
+        return $tableNumbers[$role] ?? null;
+    }
+
 }
