@@ -4,31 +4,6 @@
     <script src="{{ asset('assets/js/libs/datatable-btns.js?ver=3.0.3') }}"></script>
     <script src="{{ asset('assets/js/example-toastr.js?ver=3.0.3') }}"></script>
     <script>
-        function printPatient(patientId) {
-            $.ajax({
-                url: "{{ route('patient.print', '') }}/" + patientId,
-                method: 'GET',
-                success: function(data) {
-                    var printContent = document.createElement('div');
-                    printContent.innerHTML = data;
-
-                    var headerFooter = printContent.querySelectorAll('.nk-header, .nk-footer, .nk-sidebar');
-                    headerFooter.forEach(function(element) {
-                        element.style.display = 'none';
-                    });
-
-                    var printWindow = window.open('', '_blank');
-                    printWindow.document.write(printContent.innerHTML);
-                    printWindow.document.close();
-                    printWindow.print();
-                },
-                error: function(error) {
-                    console.error('Error loading print view:', error);
-                }
-            });
-        }
-    </script>
-    <script>
         $(document).ready(function() {
             $(document).on('show.bs.modal', '#editPatientModal', function(event) {
                 const button = $(event.relatedTarget);
@@ -129,7 +104,7 @@
                                             <em class="icon ni ni-trash-fill"></em>
                                         </button>
                                         @can('admin-monitoring-all')
-                                        <a href="#" onclick="printPatient('{{ $patient->id }}')"
+                                        <a href="{{ route('patient.print', $patient->id)}}" target="_blank" 
                                             class="btn btn-primary btn-xs rounded-pill btn-dim">
                                             <em class="icon ni ni-printer-fill"></em>
                                         </a>

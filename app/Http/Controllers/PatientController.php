@@ -3,19 +3,28 @@
 namespace App\Http\Controllers;
 
 use App\Models\Patient;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class PatientController extends Controller
 {
-    public function index(Request $request)
+    public function index($tableNumber)
     {
-        $title = 'Data Pasien';
-        $role = Auth::user()->role;
+        $isAdminMonitoringAll = Auth::user()->role === 'Admin Monitoring All';
 
-        $tableNumber = $this->getTableNumberFromRole($role);
+        if (!$isAdminMonitoringAll) {
+            $userTableNumber = $this->getTableNumberFromRole(Auth::user()->role);
 
-        $patients = Patient::where('table_number', $tableNumber)->get();
+            if ($userTableNumber != $tableNumber) {
+                abort(403, 'Forbidden');
+            }
+        }
+
+        $title = 'Data Pasien Meja ' . $tableNumber;
+
+        $today = Carbon::today()->toDateString();
+        $patients = Patient::where('table_number', $tableNumber)->whereDate('created_at', $today)->get();
 
         return view('patient.index', compact('title', 'patients'));
     }
@@ -66,14 +75,14 @@ class PatientController extends Controller
             'uric_acid' => 'required|string|max:255',
             'cholesterol' => 'required|string|max:255',
         ]);
-    
+
         $role = Auth::user()->role;
-    
+
         $data['table_number'] = $this->getTableNumberFromRole($role);
-    
+
         $patient = Patient::findOrFail($id);
         $patient->update($data);
-    
+
         return redirect()->route('patient.index')->with('success', "Data pasien berhasil diperbarui");
     }
 
@@ -90,7 +99,6 @@ class PatientController extends Controller
         $title = "print";
         $patient = Patient::findOrFail($id);
 
-        // Render tampilan pencetakan dan kirimkan data artikel
         return view('patient.print', compact('patient', 'title'));
     }
     public function getPatient($id)
@@ -98,5 +106,4 @@ class PatientController extends Controller
         $patient = Patient::find($id);
         return response()->json($patient);
     }
-    
 }

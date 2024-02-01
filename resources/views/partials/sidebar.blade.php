@@ -22,11 +22,19 @@
             <div class="nk-sidebar-menu" data-simplebar>
                 <ul class="nk-menu">
                     <li class="nk-menu-item">
-                        <a href="" class="nk-menu-link">
+                        <a href="{{ route('dashboard.index') }}" class="nk-menu-link">
                             <span class="nk-menu-icon"><em class="icon ni ni-dashboard"></em></span>
                             <span class="nk-menu-text">Dashboard</span>
                         </a>
                     </li>
+                    @can('admin-table')
+                        <li class="nk-menu-item">
+                            <a href="{{ route('patient.index', substr(Auth::user()->role, -1)) }}" class="nk-menu-link">
+                                <span class="nk-menu-icon"><em class="icon ni ni-plus-medi-fill"></em></span>
+                                <span class="nk-menu-text">Pasien</span>
+                            </a>
+                        </li>
+                    @endcan
                 </ul>
             </div>
         </div>

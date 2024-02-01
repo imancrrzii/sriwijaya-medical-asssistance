@@ -28,13 +28,12 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
-    Route::get('patient-table/{tableNumber}', [DashboardController::class, 'showTableData'])
+    Route::get('patient/table-{tableNumber}', [PatientController::class, 'index'])
         ->middleware(['auth', 'can:admin-table-monitoring-all'])
-        ->name('table.data');
+        ->name('patient.index');
 
 
     // Patient
-    Route::get('patient', [PatientController::class, 'index'])->name('patient.index');
     Route::post('patient', [PatientController::class, 'store'])->name('patient.store');
     Route::get('patient/{id}', [PatientController::class, 'getPatient'])->name('patient.get');
     Route::post('patient/{id}/edit', [PatientController::class, 'update'])->name('patient.update');

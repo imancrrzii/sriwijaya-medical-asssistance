@@ -12,7 +12,7 @@
         <div class="row">
             @canany(['admin-table-1-monitoring-all'])
                 <div class="col-md-3 my-4">
-                    <a href="{{ route('table.data', ['tableNumber' => 1]) }}">
+                    <a href="{{ route('patient.index', ['tableNumber' => 1]) }}">
                         <div class="card card-bordered card-preview shadow-sm">
                             <div class="card-inner">
                                 <div class="team">
@@ -38,7 +38,7 @@
 
             @canany(['admin-table-2-monitoring-all'])
             <div class="col-md-3 my-4">
-                <a href="{{ route('table.data', ['tableNumber' => 2]) }}">
+                <a href="{{ route('patient.index', ['tableNumber' => 2]) }}">
                     <div class="card card-bordered card-preview shadow-sm">
                         <div class="card-inner">
                             <div class="team">
@@ -63,7 +63,7 @@
 
             @canany(['admin-table-3-monitoring-all'])
             <div class="col-md-3 my-4">
-                <a href="{{ route('table.data', ['tableNumber' => 3]) }}">
+                <a href="{{ route('patient.index', ['tableNumber' => 3]) }}">
                     <div class="card card-bordered card-preview shadow-sm">
                         <div class="card-inner">
                             <div class="team">
@@ -88,7 +88,7 @@
 
             @canany(['admin-table-4-monitoring-all'])
             <div class="col-md-3 my-4">
-                <a href="{{ route('table.data', ['tableNumber' => 4]) }}">
+                <a href="{{ route('patient.index', ['tableNumber' => 4]) }}">
                     <div class="card card-bordered card-preview shadow-sm">
                         <div class="card-inner">
                             <div class="team">
