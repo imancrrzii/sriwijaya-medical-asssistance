@@ -11,155 +11,103 @@
         </div>
         <div class="row">
             @canany(['admin-table-1-monitoring-all'])
-                <div class="col-md-4">
-                    <div class="card card-bordered card-preview shadow-sm mt-3">
-                        <div class="nk-ecwg nk-ecwg6">
+                <div class="col-md-3 my-4">
+                    <a href="{{ route('table.data', ['tableNumber' => 1]) }}">
+                        <div class="card card-bordered card-preview shadow-sm">
                             <div class="card-inner">
-                                <div class="card-title-group">
-                                    <div class="card-title">
-                                        <h6 class="title">Meja 1</h6>
-                                    </div>
-                                </div>
-                                <div class="data">
-                                    <div class="data-group">
-                                        <div class="amount"></div>
-                                    </div>
-                                    <div class="info">
-                                        <div class="d-flex justify-content-between">
-                                            <a href="" class="text-dark"></a>
-                                            <span
-                                                class="badge badge-dim bg-primary d-flex justify-content-center align-items-center w-15 shadow-sm"></span>
+                                <div class="team">
+                                    <div class="user-card user-card-s2">
+                                        <div class="user-avatar md bg-primary">
+                                            <em class="icon ni ni-user"></em>
+                                            <div class="status dot dot-lg dot-success"></div>
                                         </div>
-                                        <div class="d-flex justify-content-between my-1">
-                                            <a href="" class="text-secondary"></a>
-                                            <span
-                                                class="badge badge-dim bg-danger d-flex justify-content-center align-items-center w-15 shadow-sm"></span>
-                                        </div>
-                                        <div class="d-flex justify-content-between">
-                                            <a href="" class="text-secondary"></a>
-                                            <span
-                                                class="badge badge-dim bg-warning d-flex justify-content-center align-items-center w-15 shadow-sm"></span>
+                                        <div class="user-info">
+                                            <h6>Admin 1</h6>
                                         </div>
                                     </div>
+                                    <ul class="team-statistics">
+                                        <li><span >{{ $dataTable1s }}</span><span>Pasien</span></li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
             @endcanany
 
 
-@canany(['admin-table-2-monitoring-all'])
-            <div class="col-md-4">
-                <div class="card card-bordered card-preview shadow-sm mt-3">
-                    <div class="nk-ecwg nk-ecwg6">
+            @canany(['admin-table-2-monitoring-all'])
+            <div class="col-md-3 my-4">
+                <a href="{{ route('table.data', ['tableNumber' => 2]) }}">
+                    <div class="card card-bordered card-preview shadow-sm">
                         <div class="card-inner">
-                            <div class="card-title-group">
-                                <div class="card-title">
-                                    <h6 class="title">Meja 2</h6>
-                                </div>
-                            </div>
-                            <div class="data">
-                                <div class="data-group">
-                                    <div class="amount"></div>
-                                </div>
-                                <div class="info">
-                                    <div class="d-flex justify-content-between">
-                                        <a href="" class="text-dark"></a>
-                                        <span
-                                            class="badge badge-dim bg-primary d-flex justify-content-center align-items-center w-15 shadow-sm"></span>
+                            <div class="team">
+                                <div class="user-card user-card-s2">
+                                    <div class="user-avatar md bg-secondary">
+                                        <em class="icon ni ni-user"></em>
+                                        <div class="status dot dot-lg dot-success"></div>
                                     </div>
-                                    <div class="d-flex justify-content-between my-1">
-                                        <a href="" class="text-secondary"></a>
-                                        <span
-                                            class="badge badge-dim bg-danger d-flex justify-content-center align-items-center w-15 shadow-sm"></span>
-                                    </div>
-                                    <div class="d-flex justify-content-between">
-                                        <a href="" class="text-secondary"></a>
-                                        <span
-                                            class="badge badge-dim bg-warning d-flex justify-content-center align-items-center w-15 shadow-sm"></span>
+                                    <div class="user-info">
+                                        <h6>Admin 2</h6>
                                     </div>
                                 </div>
+                                <ul class="team-statistics">
+                                    <li><span >{{ $dataTable2s }}</span><span>Pasien</span></li>
+                                </ul>
                             </div>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
             @endcanany
 
             @canany(['admin-table-3-monitoring-all'])
-            <div class="col-md-4">
-                <div class="card card-bordered card-preview shadow-sm mt-3">
-                    <div class="nk-ecwg nk-ecwg6">
+            <div class="col-md-3 my-4">
+                <a href="{{ route('table.data', ['tableNumber' => 3]) }}">
+                    <div class="card card-bordered card-preview shadow-sm">
                         <div class="card-inner">
-                            <div class="card-title-group">
-                                <div class="card-title">
-                                    <h6 class="title">Meja 3</h6>
-                                </div>
-                            </div>
-                            <div class="data">
-                                <div class="data-group">
-                                    <div class="amount"></div>
-                                </div>
-                                <div class="info">
-                                    <div class="d-flex justify-content-between">
-                                        <a href="" class="text-dark"></a>
-                                        <span
-                                            class="badge badge-dim bg-primary d-flex justify-content-center align-items-center w-15 shadow-sm"></span>
+                            <div class="team">
+                                <div class="user-card user-card-s2">
+                                    <div class="user-avatar md bg-warning text-black">
+                                        <em class="icon ni ni-user"></em>
+                                        <div class="status dot dot-lg dot-success"></div>
                                     </div>
-                                    <div class="d-flex justify-content-between my-1">
-                                        <a href="" class="text-secondary"></a>
-                                        <span
-                                            class="badge badge-dim bg-danger d-flex justify-content-center align-items-center w-15 shadow-sm"></span>
-                                    </div>
-                                    <div class="d-flex justify-content-between">
-                                        <a href="" class="text-secondary"></a>
-                                        <span
-                                            class="badge badge-dim bg-warning d-flex justify-content-center align-items-center w-15 shadow-sm"></span>
+                                    <div class="user-info">
+                                        <h6>Admin 3</h6>
                                     </div>
                                 </div>
+                                <ul class="team-statistics">
+                                    <li><span >{{ $dataTable3s }}</span><span>Pasien</span></li>
+                                </ul>
                             </div>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
             @endcanany
 
             @canany(['admin-table-4-monitoring-all'])
-            <div class="col-md-4">
-                <div class="card card-bordered card-preview shadow-sm mt-3">
-                    <div class="nk-ecwg nk-ecwg6">
+            <div class="col-md-3 my-4">
+                <a href="{{ route('table.data', ['tableNumber' => 4]) }}">
+                    <div class="card card-bordered card-preview shadow-sm">
                         <div class="card-inner">
-                            <div class="card-title-group">
-                                <div class="card-title">
-                                    <h6 class="title">Meja 4</h6>
-                                </div>
-                            </div>
-                            <div class="data">
-                                <div class="data-group">
-                                    <div class="amount"></div>
-                                </div>
-                                <div class="info">
-                                    <div class="d-flex justify-content-between">
-                                        <a href="" class="text-dark"></a>
-                                        <span
-                                            class="badge badge-dim bg-primary d-flex justify-content-center align-items-center w-15 shadow-sm"></span>
+                            <div class="team">
+                                <div class="user-card user-card-s2">
+                                    <div class="user-avatar md bg-danger">
+                                        <em class="icon ni ni-user"></em>
+                                        <div class="status dot dot-lg dot-success"></div>
                                     </div>
-                                    <div class="d-flex justify-content-between my-1">
-                                        <a href="" class="text-secondary"></a>
-                                        <span
-                                            class="badge badge-dim bg-danger d-flex justify-content-center align-items-center w-15 shadow-sm"></span>
-                                    </div>
-                                    <div class="d-flex justify-content-between">
-                                        <a href="" class="text-secondary"></a>
-                                        <span
-                                            class="badge badge-dim bg-warning d-flex justify-content-center align-items-center w-15 shadow-sm"></span>
+                                    <div class="user-info">
+                                        <h6>Admin 4</h6>
                                     </div>
                                 </div>
+                                <ul class="team-statistics">
+                                    <li><span >{{ $dataTable4s }}</span><span>Pasien</span></li>
+                                </ul>
                             </div>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
             @endcanany
         </div>
