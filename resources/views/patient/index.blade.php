@@ -94,20 +94,22 @@
                                     <td class="text-center">{{ $index + 1 }}</td>
                                     <td>{{ $patient->name }}</td>
                                     <td class="text-center">
-                                        <button class="btn btn-warning btn-xs rounded-pill btn-dim" data-bs-toggle="modal"
-                                            data-bs-target="#editPatientModal" data-modal-title="Edit Konseptor"
-                                            data-id="{{ $patient->id }}">
-                                            <em class="icon ni ni-edit-fill"></em>
-                                        </button>
-                                        <button class="btn btn-danger btn-xs rounded-pill btn-dim" data-bs-toggle="modal"
-                                            data-bs-target="#deletePatientModal" data-id="{{ $patient->id }}">
-                                            <em class="icon ni ni-trash-fill"></em>
-                                        </button>
+                                        @can('admin-table')
+                                            <button class="btn btn-warning btn-xs rounded-pill btn-dim" data-bs-toggle="modal"
+                                                data-bs-target="#editPatientModal" data-modal-title="Edit Konseptor"
+                                                data-id="{{ $patient->id }}">
+                                                <em class="icon ni ni-edit-fill"></em>
+                                            </button>
+                                            <button class="btn btn-danger btn-xs rounded-pill btn-dim" data-bs-toggle="modal"
+                                                data-bs-target="#deletePatientModal" data-id="{{ $patient->id }}">
+                                                <em class="icon ni ni-trash-fill"></em>
+                                            </button>
+                                        @endcan
                                         @can('admin-monitoring-all')
-                                        <a href="{{ route('patient.print', $patient->id)}}" target="_blank" 
-                                            class="btn btn-primary btn-xs rounded-pill btn-dim">
-                                            <em class="icon ni ni-printer-fill"></em>
-                                        </a>
+                                            <a href="{{ route('patient.print', $patient->id) }}" target="_blank"
+                                                class="btn btn-primary btn-xs rounded-pill btn-dim">
+                                                <em class="icon ni ni-printer-fill"></em>
+                                            </a>
                                         @endcan
                                     </td>
                                 </tr>

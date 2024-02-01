@@ -36,7 +36,7 @@ Route::middleware('auth')->group(function () {
     // Patient
     Route::post('patient', [PatientController::class, 'store'])->name('patient.store');
     Route::get('patient/{id}', [PatientController::class, 'getPatient'])->name('patient.get');
-    Route::post('patient/{id}/edit', [PatientController::class, 'update'])->name('patient.update');
+    Route::post('/patient/{id}/update', [PatientController::class, 'update'])->name('patient.update');
     Route::delete('patient/{id}/delete', [PatientController::class, 'delete'])->name('patient.delete');
     Route::get('/patient/print/{id}', [PatientController::class, 'printPatient'])->name('patient.print');
 });

@@ -83,7 +83,8 @@ class PatientController extends Controller
         $patient = Patient::findOrFail($id);
         $patient->update($data);
 
-        return redirect()->route('patient.index')->with('success', "Data pasien berhasil diperbarui");
+        return redirect()->route('patient.index', ['tableNumber' => $data['table_number']])->with('success', "Data pasien berhasil diperbarui");
+
     }
 
     public function delete($id)
