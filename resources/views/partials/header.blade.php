@@ -1,3 +1,19 @@
+@php
+    $avatarStyle = '';
+
+    if (Gate::check('admin-table-1')) {
+        $avatarStyle = 'bg-gray-300 text-black';
+    } elseif (Gate::check('admin-table-2')) {
+        $avatarStyle = 'bg-gray-400 text-black';
+    } elseif (Gate::check('admin-table-3')) {
+        $avatarStyle = 'bg-gray-500 text-white';
+    } elseif (Gate::check('admin-table-4')) {
+        $avatarStyle = 'bg-gray-600 text-white';
+    } else {
+        $avatarStyle = 'bg-primary';
+    }
+@endphp
+
 <div class="nk-header nk-header-fixed is-light">
     <div class="container-fluid">
         <div class="nk-header-wrap">
@@ -18,7 +34,7 @@
                     <li class="dropdown user-dropdown">
                         <a href="#" class="dropdown-toggle me-n1" data-bs-toggle="dropdown">
                             <div class="user-toggle">
-                                <div class="user-avatar sm">
+                                <div class="user-avatar sm {{ $avatarStyle }}">
                                     <em class="icon ni ni-user-alt"></em>
                                 </div>
                                 <div class="user-info d-none d-xl-block">
@@ -30,12 +46,12 @@
                         <div class="dropdown-menu dropdown-menu-md dropdown-menu-end">
                             <div class="dropdown-inner user-card-wrap bg-lighter d-none d-md-block">
                                 <div class="user-card">
-                                    <div class="user-avatar">
+                                    <div class="user-avatar {{ $avatarStyle }}">
                                         <span class="icon ni ni-user-alt"></span>
                                     </div>
                                     <div class="user-info">
                                         <span class="lead-text">{{ Auth::user()->name }}</span>
-                                        <span class="sub-text">{{ Auth::user()->role }}</span>
+                                        <span class="sub-text text-primary">{{ Auth::user()->role }}</span>
                                     </div>
                                 </div>
                             </div>

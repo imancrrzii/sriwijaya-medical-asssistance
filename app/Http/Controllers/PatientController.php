@@ -63,6 +63,12 @@ class PatientController extends Controller
         return $tableNumbers[$role] ?? null;
     }
 
+    public function show($id)
+    {
+        $patient = Patient::findOrFail($id);
+        return view('patient.index', compact('patients'));
+    }
+
     public function update(Request $request, $id)
     {
         $data = $request->validate([

@@ -27,6 +27,26 @@
                 form.attr('action', '{{ route('patient.update', ':id') }}'.replace(':id', id));
             });
 
+            $(document).on('show.bs.modal', '#showPatientModal', function(event) {
+                const button = $(event.relatedTarget);
+                const id = button.data('id');
+                const modal = $(this);
+                const form = modal.find('#editForm');
+
+                $.getJSON('{{ route('patient.get', ':id') }}'.replace(':id', id), function(data) {
+                    form.find('#name').val(data.name);
+                    form.find('#age').val(data.age);
+                    form.find('input[name="gender"][value="' + data.gender + '"]').prop('checked',
+                        true);
+                    form.find('#add_address').val(data.address);
+                    form.find('#add_blood_pressure').val(data.blood_pressure);
+                    form.find('#add_blood_glucose').val(data.blood_glucose);
+                    form.find('#add_uric_acid').val(data.uric_acid);
+                    form.find('#add_cholesterol').val(data.cholesterol);
+
+                });
+            });
+
             $(document).on('show.bs.modal', '#deletePatientModal', async function(event) {
                 const button = $(event.relatedTarget);
                 const id = button.data('id');
@@ -94,6 +114,11 @@
                                     <td class="text-center">{{ $index + 1 }}</td>
                                     <td>{{ $patient->name }}</td>
                                     <td class="text-center">
+                                        <button class="btn btn-primary btn-xs rounded-pill btn-dim" data-bs-toggle="modal"
+                                        data-bs-target="#showPatientModal"
+                                        data-id="{{ $patient->id }}">
+                                        <em class="icon ni ni-eye-fill"></em>
+                                    </button>
                                         @can('admin-table')
                                             <button class="btn btn-warning btn-xs rounded-pill btn-dim" data-bs-toggle="modal"
                                                 data-bs-target="#editPatientModal" data-modal-title="Edit Konseptor"
@@ -107,7 +132,7 @@
                                         @endcan
                                         @can('admin-monitoring-all')
                                             <a href="{{ route('patient.print', $patient->id) }}" target="_blank"
-                                                class="btn btn-primary btn-xs rounded-pill btn-dim">
+                                                class="btn btn-success btn-xs rounded-pill btn-dim">
                                                 <em class="icon ni ni-printer-fill"></em>
                                             </a>
                                         @endcan
@@ -159,7 +184,7 @@
                             <div class="col-md-4 col-sm-6">
                                 <div class="preview-block">
                                     <div class="custom-control custom-control-sm custom-radio">
-                                        <input type="radio" id="customRadio1" name="gender" value="laki-laki"
+                                        <input type="radio" id="customRadio1" name="gender" value="Laki-laki"
                                             class="custom-control-input">
                                         <label class="custom-control-label" for="customRadio1">Laki-laki</label>
                                     </div>
@@ -168,7 +193,7 @@
                             <div class="col-md-4 col-sm-6">
                                 <div class="preview-block">
                                     <div class="custom-control custom-control-sm custom-radio">
-                                        <input type="radio" id="customRadio2" name="gender" value="perempuan"
+                                        <input type="radio" id="customRadio2" name="gender" value="Perempuan"
                                             class="custom-control-input">
                                         <label class="custom-control-label" for="customRadio2">Perempuan</label>
                                     </div>
@@ -234,7 +259,7 @@
 
     {{-- Edit Modal --}}
     <div class="modal fade" id="editPatientModal">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg modal-dialog-top" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Edit Pasien</h5>
@@ -269,7 +294,7 @@
                             <div class="col-md-4 col-sm-6">
                                 <div class="preview-block">
                                     <div class="custom-control custom-control-sm custom-radio">
-                                        <input type="radio" id="editCustomRadio1" name="gender" value="laki-laki"
+                                        <input type="radio" id="editCustomRadio1" name="gender" value="Laki-laki"
                                             class="custom-control-input">
                                         <label class="custom-control-label" for="editCustomRadio1">Laki-laki</label>
                                     </div>
@@ -278,7 +303,7 @@
                             <div class="col-md-4 col-sm-6">
                                 <div class="preview-block">
                                     <div class="custom-control custom-control-sm custom-radio">
-                                        <input type="radio" id="editCustomRadio2" name="gender" value="perempuan"
+                                        <input type="radio" id="editCustomRadio2" name="gender" value="Perempuan"
                                             class="custom-control-input">
                                         <label class="custom-control-label" for="editCustomRadio2">Perempuan</label>
                                     </div>
@@ -340,6 +365,111 @@
             </div>
         </div>
     </div>
+
+        {{-- Show Modal --}}
+        <div class="modal fade" id="showPatientModal">
+            <div class="modal-dialog modal-lg modal-dialog-top" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Detail Pasien</h5>
+                        <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">
+                            <em class="icon ni ni-cross"></em>
+                        </a>
+                    </div>
+                    <div class="modal-body">
+                        <form action="" method="POST" class="form-validate is-alter" id="editForm">
+                            @csrf
+                            <div class="form-group row">
+                                <label for="name" class="col-md-4 col-form-label">Nama Pasien :</label>
+                                <div class="col-md-8">
+                                    <div class="form-control-wrap">
+                                        <input type="text" class="form-control" id="name" name="name"
+                                            placeholder="Masukkan nama pasien" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="age" class="col-md-4 col-form-label">Umur Pasien :</label>
+                                <div class="col-md-8">
+                                    <div class="form-control-wrap">
+                                        <input type="number" class="form-control" id="age" name="age"
+                                            placeholder="Masukkan umur pasien" required>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <div class="form-group row gy-4">
+                                <label class="col-md-4 col-form-label">Jenis Kelamin :</label>
+                                <div class="col-md-4 col-sm-6">
+                                    <div class="preview-block">
+                                        <div class="custom-control custom-control-sm custom-radio">
+                                            <input type="radio" id="editCustomRadio1" name="gender" value="Laki-laki"
+                                                class="custom-control-input">
+                                            <label class="custom-control-label" for="editCustomRadio1">Laki-laki</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-sm-6">
+                                    <div class="preview-block">
+                                        <div class="custom-control custom-control-sm custom-radio">
+                                            <input type="radio" id="editCustomRadio2" name="gender" value="Perempuan"
+                                                class="custom-control-input">
+                                            <label class="custom-control-label" for="editCustomRadio2">Perempuan</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row mt-3">
+                                <label for="add_address" class="col-md-4 col-form-label">Alamat Pasien :</label>
+                                <div class="col-md-8">
+                                    <div class="form-control-wrap">
+                                        <textarea type="text" class="form-control" id="add_address" name="address" placeholder="Masukkan alamat pasien"
+                                            required></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <h5 class="my-3">Hasil Pemeriksaan</h5>
+                            <div class="form-group row">
+                                <label for="add_blood_pressure" class="col-md-4 col-form-label">Tekanan darah :</label>
+                                <div class="col-md-8">
+                                    <div class="form-control-wrap">
+                                        <input type="text" class="form-control" id="add_blood_pressure"
+                                            name="blood_pressure" placeholder="Masukkan tekanan darah pasien" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="add_blood_glucose" class="col-md-4 col-form-label">Gula darah :</label>
+                                <div class="col-md-8">
+                                    <div class="form-control-wrap">
+                                        <input type="text" class="form-control" id="add_blood_glucose"
+                                            name="blood_glucose" placeholder="Masukkan gula darah pasien" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="add_uric_acid" class="col-md-4 col-form-label">Asam urat :</label>
+                                <div class="col-md-8">
+                                    <div class="form-control-wrap">
+                                        <input type="text" class="form-control" id="add_uric_acid" name="uric_acid"
+                                            placeholder="Masukkan asam urat pasien" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="add_cholesterol" class="col-md-4 col-form-label">Kolesterol :</label>
+                                <div class="col-md-8">
+                                    <div class="form-control-wrap">
+                                        <input type="text" class="form-control" id="add_cholesterol" name="cholesterol"
+                                            placeholder="Masukkan kolesterol pasien" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     {{-- Delete Modal --}}
     <div class="modal fade" id="deletePatientModal">

@@ -30073,7 +30073,7 @@ li {
   padding: 0.5rem 0;
 }
 .list-plain a:hover {
-  color: #854fff;
+  color: #526484;
 }
 .list-category a {
   font-weight: 500;
@@ -30334,17 +30334,17 @@ li {
   position: relative;
 }
 .link-list-plain a:hover {
-  color: #854fff;
+  color: #526484;
   background: #f5f6fa;
 }
 .link-list-plain a .icon {
   font-size: 1.125rem;
   width: 1.75rem;
   opacity: 0.8;
-  color: #854fff;
+  color: #526484;
 }
 .link-list-plain li.active > a, .link-list-plain a.active {
-  color: #854fff;
+  color: #526484;
   background: #f5f6fa;
 }
 .link-list-plain.text-center a {
@@ -30669,7 +30669,7 @@ select:-webkit-autofill:focus {
   }
 }
 .overline-title {
-  font-size: 11px;
+  font-size: 16px;
   line-height: 1.2;
   letter-spacing: 0.2em;
   color: #8094ae;
@@ -31004,7 +31004,7 @@ h6 .badge, .h6 .badge {
   justify-content: center;
   align-items: center;
   color: #fff;
-  background: #9d72ff;
+  background: var(--bs-purple);
   font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -34430,19 +34430,18 @@ button.close {
   max-height: 60px;
 }
 .invoice-bills {
-  font-size: 12px;
+  font-size: 13px;
 }
 .invoice-bills .table {
   min-width: 580px;
 }
 .invoice-bills .table th {
-  color: #854fff;
-  font-size: 12px;
-  text-transform: uppercase;
+  color: #1f2b3a;
+  font-size: 13px;
   border-top: 0;
 }
 .invoice-bills .table th:last-child, .invoice-bills .table td:last-child {
-  text-align: right;
+  text-align: left;
 }
 .invoice-bills .table tfoot {
   border-top: 1px solid #dbdfea;
@@ -34466,31 +34465,28 @@ button.close {
 .invoice-head {
   padding-bottom: 1.5rem;
   display: flex;
-  justify-content: space-between;
   flex-direction: column;
 }
 .invoice-desc {
-  width: 210px;
+  width: 500px;
   padding-top: 1.5rem;
 }
 .invoice-desc .title {
-  text-transform: uppercase;
-  color: #854fff;
+  color: #000;
 }
 .invoice-desc ul li {
   padding: 0.25rem 0;
 }
 .invoice-desc ul span {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
-  color: #526484;
+  color: #1f2b3a;
 }
 .invoice-desc ul span:first-child {
   min-width: 90px;
   display: inline-block;
-  text-transform: uppercase;
   letter-spacing: 1px;
-  color: #8094ae;
+  color: #1f2b3a;
 }
 .invoice-desc ul span:last-child {
   padding-left: 0.75rem;
@@ -34514,13 +34510,13 @@ button.close {
   display: inline-block;
   vertical-align: top;
   margin-top: -2px;
-  color: #854fff;
+  color: #1f2b3a;
   margin-right: 0.5rem;
 }
 .invoice-contact ul .icon + span {
   display: inline-block;
   vertical-align: top;
-  color: #8094ae;
+  color: #1f2b3a;
 }
 .invoice-print {
   max-width: 940px;
@@ -40145,7 +40141,7 @@ body.dark-mode.ui-shady, body.dark-mode.ui-clean, body.dark-mode.bg-lighter, .du
   color: #8094ae;
 }
 .dark-mode .link-list-menu a:hover, .dark-mode .link-list-menu a.active, .dark-mode .list-plain a:hover, .dark-mode .list-plain a.active {
-  color: #854fff;
+  color: #526484;
 }
 .dark-mode .nav-switch .nav-link.active, .dark-mode .list-apps a:hover .list-apps-title {
   color: #fff;
