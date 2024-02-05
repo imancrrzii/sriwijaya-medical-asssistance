@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\ResetPasswordController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -48,4 +49,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('patient/{id}/delete', [PatientController::class, 'delete'])->name('patient.delete');
     Route::get('/patient/print/{id}', [PatientController::class, 'printPatient'])->name('patient.print');
     
+    // Setting
+    Route::get('/update-password', [UserController::class, 'showUpdatePasswordView'])->name('update.password.view');
+    Route::post('/update-password', [UserController::class, 'updatePassword'])->name('update.password');
 });

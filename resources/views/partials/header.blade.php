@@ -23,10 +23,8 @@
             </div>
             <div class="nk-header-brand d-xl-none">
                 <a href="html/index.html" class="logo-link">
-                    <img class="logo-light logo-img" src="{{ asset('assets/images/TBMS.png') }}"
-                        srcset="./images/logo2x.png 2x" alt="logo">
-                    <img class="logo-dark logo-img" src="{{ asset('assets/images/TBMS.png') }}"
-                        srcset="./images/logo-dark2x.png 2x" alt="logo-dark">
+                    <img class="logo-light logo-img" src="{{ asset('assets/images/TBMS.png') }}" alt="logo">
+                    <img class="logo-dark logo-img" src="{{ asset('assets/images/TBMS.png') }}" alt="logo-dark">
                 </a>
             </div>
             <div class="nk-header-tools">
@@ -59,6 +57,16 @@
                                 <ul class="link-list">
                                     <li><a class="dark-switch" href="#"><em
                                                 class="icon ni ni-moon"></em><span>Mode Gelap</span></a></li>
+                                </ul>
+                            </div>
+                            <div class="dropdown-inner">
+                                <ul class="link-list">
+                                    <li>
+                                        <a href="{{ route('update.password.view') }}">
+                                            <em class="icon ni ni-edit"></em>
+                                            <span>Ganti Password</span>
+                                        </a>
+                                    </li>
                                 </ul>
                             </div>
                             <div class="dropdown-inner">
