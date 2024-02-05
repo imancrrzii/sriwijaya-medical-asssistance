@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PatientController;
+use App\Http\Controllers\ResetPasswordController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,6 +24,12 @@ Route::get('/', function () {
 Route::middleware('guest')->group(function () {
     Route::get('login', [AuthController::class, 'index']);
     Route::post('login', [AuthController::class, 'login'])->name('login');
+
+    // Reset password
+    Route::get('/forgot-password', [ResetPasswordController::class, 'forgotView'])->name('forgot.view');
+    Route::post('/forgot-password', [ResetPasswordController::class, 'forgotSend'])->name('forgot.send');
+    Route::get('/reset-password', [ResetPasswordController::class, 'resetView'])->name('reset.view');
+    Route::post('/reset-password', [ResetPasswordController::class, 'resetAction'])->name('reset.action');
 });
 
 Route::middleware('auth')->group(function () {
