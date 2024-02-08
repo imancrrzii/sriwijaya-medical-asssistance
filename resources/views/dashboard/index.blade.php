@@ -154,7 +154,7 @@
         <div class="nk-block nk-block-lg">
             <div class="nk-block-head">
                 <div class="nk-block-head-content">
-                    <h4 class="nk-block-title">Dashboard</h4>
+                    <h4 class="nk-block-title mb-2">Dashboard</h4>
                 </div>
             </div>
         </div>
@@ -173,7 +173,7 @@
                                                     <div class="status dot dot-lg dot-success"></div>
                                                 </div>
                                                 <div class="user-info">
-                                                    <h6>Table 1</h6>
+                                                    <h6>Meja 1</h6>
                                                 </div>
                                             </div>
                                             <ul class="team-statistics">
@@ -199,7 +199,7 @@
                                                     <div class="status dot dot-lg dot-success"></div>
                                                 </div>
                                                 <div class="user-info">
-                                                    <h6>Table 2</h6>
+                                                    <h6>Meja 2</h6>
                                                 </div>
                                             </div>
                                             <ul class="team-statistics">
@@ -224,7 +224,7 @@
                                                     <div class="status dot dot-lg dot-success"></div>
                                                 </div>
                                                 <div class="user-info">
-                                                    <h6>Table 3</h6>
+                                                    <h6>Meja 3</h6>
                                                 </div>
                                             </div>
                                             <ul class="team-statistics">
@@ -249,7 +249,7 @@
                                                     <div class="status dot dot-lg dot-success"></div>
                                                 </div>
                                                 <div class="user-info">
-                                                    <h6>Admin 4</h6>
+                                                    <h6>Meja 4</h6>
                                                 </div>
                                             </div>
                                             <ul class="team-statistics">

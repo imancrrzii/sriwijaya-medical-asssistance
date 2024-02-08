@@ -4,7 +4,8 @@
             <a href="" class="logo-link nk-sidebar-logo">
                 <img class="logo-light logo-img" src="{{ asset('assets/images/TBMS.png') }}" alt="logo">
                 <img class="logo-dark logo-img" src="{{ asset('assets/images/TBMS.png') }}" alt="logo-dark">
-                <img class="logo-small logo-img logo-img-small" src="{{ asset('assets/images/TBMS.png') }}" alt="logo-small">
+                <img class="logo-small logo-img logo-img-small" src="{{ asset('assets/images/TBMS.png') }}"
+                    alt="logo-small">
             </a>
         </div>
         <div class="nk-menu-trigger me-n2">
@@ -31,7 +32,34 @@
                                 <span class="nk-menu-text">Pasien</span>
                             </a>
                         </li>
-                    @endcan
+                        @endcan
+                        @can('admin-monitoring-all')
+                        <li class="nk-menu-item has-sub">
+                            <a href="#" class="nk-menu-link nk-menu-toggle">
+                                <span class="nk-menu-icon"><em class="icon ni ni-plus-medi-fill"></em></span>
+                                <span class="nk-menu-text">Pasien</span>
+                            </a>
+                            <ul class="nk-menu-sub">
+                                <li class="nk-menu-item">
+                                    <a href={{ route('patient.index', ['tableNumber' => 1]) }} class="nk-menu-link"><span
+                                            class="nk-menu-text"><em class="icon ni ni-book me-1"></em>Meja 1</span></a>
+                                </li>
+                                <li class="nk-menu-item">
+                                    <a href={{ route('patient.index', ['tableNumber' => 2]) }} class="nk-menu-link"><span
+                                            class="nk-menu-text"><em class="icon ni ni-book me-1"></em>Meja 2</span></a>
+                                </li>
+                                <li class="nk-menu-item">
+                                    <a href={{ route('patient.index', ['tableNumber' => 3]) }} class="nk-menu-link"><span
+                                            class="nk-menu-text"><em class="icon ni ni-book me-1"></em>Meja 3</span></a>
+                                </li>
+                                <li class="nk-menu-item">
+                                    <a href={{ route('patient.index', ['tableNumber' => 4]) }} class="nk-menu-link"><span
+                                            class="nk-menu-text"><em class="icon ni ni-book me-1"></em>Meja 4</span></a>
+                                </li>
+                            </ul>
+                        </li>
+                            
+                        @endcan
                 </ul>
             </div>
         </div>

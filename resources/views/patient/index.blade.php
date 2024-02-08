@@ -28,24 +28,26 @@
             });
 
             $(document).on('show.bs.modal', '#showPatientModal', function(event) {
-                const button = $(event.relatedTarget);
-                const id = button.data('id');
-                const modal = $(this);
-                const form = modal.find('#editForm');
+    const button = $(event.relatedTarget);
+    const id = button.data('id');
+    const modal = $(this);
+    const form = modal.find('#editForm');
+    const printLink = modal.find('.print'); // Ambil tautan cetak
 
-                $.getJSON('{{ route('patient.get', ':id') }}'.replace(':id', id), function(data) {
-                    form.find('#name').val(data.name);
-                    form.find('#age').val(data.age);
-                    form.find('input[name="gender"][value="' + data.gender + '"]').prop('checked',
-                        true);
-                    form.find('#add_address').val(data.address);
-                    form.find('#add_blood_pressure').val(data.blood_pressure);
-                    form.find('#add_blood_glucose').val(data.blood_glucose);
-                    form.find('#add_uric_acid').val(data.uric_acid);
-                    form.find('#add_cholesterol').val(data.cholesterol);
+    // Atur href untuk tautan cetak
+    printLink.attr('href', '{{ route("patient.print", ":id") }}'.replace(':id', id));
 
-                });
-            });
+    $.getJSON('{{ route('patient.get', ':id') }}'.replace(':id', id), function(data) {
+        form.find('#name').val(data.name);
+        form.find('#age').val(data.age);
+        form.find('input[name="gender"][value="' + data.gender + '"]').prop('checked', true);
+        form.find('#add_address').val(data.address);
+        form.find('#add_blood_pressure').val(data.blood_pressure);
+        form.find('#add_blood_glucose').val(data.blood_glucose);
+        form.find('#add_uric_acid').val(data.uric_acid);
+        form.find('#add_cholesterol').val(data.cholesterol);
+    });
+});
 
             $(document).on('show.bs.modal', '#deletePatientModal', async function(event) {
                 const button = $(event.relatedTarget);
@@ -69,6 +71,7 @@
 
                 form.attr('action', '{{ route('patient.delete', ':id') }}'.replace(':id', id));
             });
+            
         });
     </script>
     @if (session()->has('success'))
@@ -461,8 +464,8 @@
                         </div>
                         @can('admin-monitoring-all')
                         <div class="form-group text-end">
-                            <a href="{{ route('patient.print', $patient->id) }}" target="_blank"
-                                class="btn btn-success btn-dim">
+                            <a href="" target="_blank"
+                                class="btn btn-primary btn-dim print">
                                 <em class="icon ni ni-printer-fill me-1"></em>Cetak
                             </a>
                         </div>
