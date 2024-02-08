@@ -261,7 +261,7 @@
                             </a>
                         </div>
                     @endcanany
-
+                    @can('admin-monitoring-all')
                     <div class="col-lg-12">
                         <div class="card card-bordered">
                             <div class="card-inner">
@@ -283,6 +283,8 @@
                             </div><!-- .card-inner -->
                         </div><!-- .card -->
                     </div><!-- .col -->
+                        
+                    @endcan
                 </div>
             </div>
         </div>

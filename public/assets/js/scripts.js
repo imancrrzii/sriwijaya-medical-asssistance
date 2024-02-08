@@ -643,38 +643,38 @@
             responsive: {
                 details: true,
             },
-            buttons: [
-                {
-                    extend: 'copy',
-                    exportOptions: {
-                        columns: ':not(.no-export)'
-                    }
-                },
-                {
-                    extend: 'excel',
-                    exportOptions: {
-                        columns: ':not(.no-export)'
-                    }
-                },
-                {
-                    extend: 'pdf',
-                    exportOptions: {
-                        columns: ':not(.no-export)'
-                    }
-                },
-                {
-                    extend: 'csv',
-                    exportOptions: {
-                        columns: ':not(.no-export)'
-                    }
-                },
-                {
-                    extend: 'print',
-                    exportOptions: {
-                        columns: ':not(.no-export)'
-                    }
-                },
-            ],
+            // buttons: [
+            //     {
+            //         extend: 'copy',
+            //         exportOptions: {
+            //             columns: ':not(.no-export)'
+            //         }
+            //     },
+            //     {
+            //         extend: 'excel',
+            //         exportOptions: {
+            //             columns: ':not(.no-export)'
+            //         }
+            //     },
+            //     {
+            //         extend: 'pdf',
+            //         exportOptions: {
+            //             columns: ':not(.no-export)'
+            //         }
+            //     },
+            //     {
+            //         extend: 'csv',
+            //         exportOptions: {
+            //             columns: ':not(.no-export)'
+            //         }
+            //     },
+            //     {
+            //         extend: 'print',
+            //         exportOptions: {
+            //             columns: ':not(.no-export)'
+            //         }
+            //     },
+            // ],
         });
         $.fn.DataTable.ext.pager.numbers_length = 7;
     }; // BootStrap Extended
