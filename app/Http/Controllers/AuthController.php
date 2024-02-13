@@ -16,7 +16,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'email' => ['required'],
+            'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
 
@@ -24,7 +24,8 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
-            return redirect()->route('dashboard.index');
+
+            return redirect()->route('patient.index');
         }
 
         return back()->with('error', 'Email dan Password tidak sesuai');
@@ -37,5 +38,16 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route('login');
+    }
+
+    protected function getTableNumberFromRole($role)
+    {
+        $tableNumbers = [
+            'Admin Table 1' => 1,
+            'Admin Table 2' => 2,
+            'Admin Table 3' => 3,
+        ];
+
+        return $tableNumbers[$role] ?? null;
     }
 }

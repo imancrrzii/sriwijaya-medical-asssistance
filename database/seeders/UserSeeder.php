@@ -36,13 +36,6 @@ class UserSeeder extends Seeder
         ]);
 
         User::create([
-            'name' => 'Admin table 4',
-            'email' => 'admintable4@gmail.com',
-            'role' => 'Admin Table 4',
-            'password' => Hash::make('password123'),
-        ]);
-
-        User::create([
             'name' => 'Admin monitoring all',
             'email' => 'adminmonitoringall@gmail.com',
             'role' => 'Admin Monitoring All',

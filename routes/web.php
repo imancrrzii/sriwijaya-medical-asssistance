@@ -36,9 +36,14 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
-    Route::get('patient/table-{tableNumber}', [PatientController::class, 'index'])
-        ->middleware(['auth', 'can:admin-table-monitoring-all'])
-        ->name('patient.index');
+    // Route::get('patient/table-{tableNumber}', [PatientController::class, 'index'])
+    //     ->middleware(['auth', 'can:admin-table'])
+    //     ->name('patient.index.table');
+
+    // Route::get('patient', [PatientController::class, 'index'])->middleware(['auth', 'can:admin-monitoring-all'])
+    //     ->name('patient.index');
+
+    Route::get('patient', [PatientController::class, 'index'])->name('patient.index');
 
 
     // Patient
@@ -47,8 +52,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/patient/{id}/show', [PatientController::class, 'show'])->name('patient.show');
     Route::post('/patient/{id}/update', [PatientController::class, 'update'])->name('patient.update');
     Route::delete('patient/{id}/delete', [PatientController::class, 'delete'])->name('patient.delete');
-    Route::get('/patient/print/{id}', [PatientController::class, 'printPatient'])->name('patient.print');
-    
+    Route::post('/patient/print/{id}', [PatientController::class, 'printPatient'])->name('patient.print');
+    Route::get('/patient/showPrint/{id}', [PatientController::class, 'showPrintView'])->name('patient.print.view');
+
     // Setting
     Route::get('/update-password', [UserController::class, 'showUpdatePasswordView'])->name('update.password.view');
     Route::post('/update-password', [UserController::class, 'updatePassword'])->name('update.password');

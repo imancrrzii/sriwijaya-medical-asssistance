@@ -28,26 +28,27 @@
             });
 
             $(document).on('show.bs.modal', '#showPatientModal', function(event) {
-    const button = $(event.relatedTarget);
-    const id = button.data('id');
-    const modal = $(this);
-    const form = modal.find('#editForm');
-    const printLink = modal.find('.print'); // Ambil tautan cetak
+                const button = $(event.relatedTarget);
+                const id = button.data('id');
+                const modal = $(this);
+                const form = modal.find('#editForm');
+                const printLink = modal.find('.print'); // Ambil tautan cetak
 
-    // Atur href untuk tautan cetak
-    printLink.attr('href', '{{ route("patient.print", ":id") }}'.replace(':id', id));
+                // Atur href untuk tautan cetak
+                printLink.attr('href', '{{ route('patient.print', ':id') }}'.replace(':id', id));
 
-    $.getJSON('{{ route('patient.get', ':id') }}'.replace(':id', id), function(data) {
-        form.find('#name').val(data.name);
-        form.find('#age').val(data.age);
-        form.find('input[name="gender"][value="' + data.gender + '"]').prop('checked', true);
-        form.find('#add_address').val(data.address);
-        form.find('#add_blood_pressure').val(data.blood_pressure);
-        form.find('#add_blood_glucose').val(data.blood_glucose);
-        form.find('#add_uric_acid').val(data.uric_acid);
-        form.find('#add_cholesterol').val(data.cholesterol);
-    });
-});
+                $.getJSON('{{ route('patient.get', ':id') }}'.replace(':id', id), function(data) {
+                    form.find('#name').val(data.name);
+                    form.find('#age').val(data.age);
+                    form.find('input[name="gender"][value="' + data.gender + '"]').prop('checked',
+                        true);
+                    form.find('#add_address').val(data.address);
+                    form.find('#add_blood_pressure').val(data.blood_pressure);
+                    form.find('#add_blood_glucose').val(data.blood_glucose);
+                    form.find('#add_uric_acid').val(data.uric_acid);
+                    form.find('#add_cholesterol').val(data.cholesterol);
+                });
+            });
 
             $(document).on('show.bs.modal', '#deletePatientModal', async function(event) {
                 const button = $(event.relatedTarget);
@@ -71,7 +72,39 @@
 
                 form.attr('action', '{{ route('patient.delete', ':id') }}'.replace(':id', id));
             });
-            
+            $(document).on('show.bs.modal', '#printPatientModal', async function(event) {
+                const button = $(event.relatedTarget);
+                const id = button.data('id');
+                const modal = $(this);
+                const form = modal.find('#printForm');
+
+                $.ajax({
+                    url: '{{ route('patient.get', ':id') }}'.replace(':id', id),
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        form.find('#printMessage').html(
+                            `Anda yakin ingin mencetak data <strong>${data.name}</strong>? Jika Anda menekan tombol cetak di bawah ini, itu akan dianggap sebagai persetujuan Anda dan sistem akan secara otomatis menyimpan bahwa data ini telah dicetak.`
+                        )
+                    },
+                    error: function(xhr, status, error) {
+                        alert('Data tidak ditemukan');
+                    }
+                });
+
+                form.attr('action', '{{ route('patient.print', ':id') }}'.replace(':id', id));
+            });
+
+            $('#printForm').submit(function(event) {
+                event.preventDefault();
+                const form = $(this);
+                const id = form.attr('action').split('/').pop();
+
+                $.post(form.attr('action'), form.serialize(), function(response) {
+                    window.location.href = 'patient/showPrint' + '/' + id;
+                });
+            });
+
         });
     </script>
     @if (session()->has('success'))
@@ -85,13 +118,152 @@
 @endpush
 
 @section('content')
-    <div class="components-preview wide-md mx-auto">
+
+    @can('admin-monitoring-all')
+        <div class="col-md-12">
+            <div class="row">
+                <div class="components-preview wide-xl mx-auto col-md-6">
+                    <div class="nk-block nk-block-lg">
+                        <div class="nk-block-head">
+                        </div>
+                        <div class="card card-bordered card-preview">
+                            <div class="card-inner">
+                                @can('admin-table')
+                                    <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal"
+                                        data-bs-target="#addPatientModal" data-modal-title="Tambah Pasien">
+                                        <span class="ni ni-plus"></span>
+                                        <span class="ms-1">Tambah pasien</span>
+                                    </button>
+                                @endcan
+                                <table class="datatable-init-export table-responsive table-bordered nowrap table"
+                                    data-export-title="Export">
+                                    <thead>
+                                        <tr class="table-white">
+                                            <th class="text-center" colspan="4">Meja 1</th>
+                                        </tr>
+                                        <tr class="table-white">
+                                                    <th class="text-center col-1">No</th>
+                                                    <th class="text-center col-6">Nama</th>
+                                                    <th class="text-center col-2">Usia</th>
+                                                    <th class="text-center no-export col-3">Aksi</th>
+                                                </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($patient1 as $index => $patient)
+                                            <tr>
+                                                <td class="text-center">{{ $index + 1 }}</td>
+                                                <td>{{ $patient->name }}</td>
+                                                <td class="text-center">{{ $patient->age }}</td>
+                                                <td class="text-center">
+                                                    <button class="btn btn-primary btn-xs rounded-pill btn-dim"
+                                                        data-bs-toggle="modal" data-bs-target="#showPatientModal"
+                                                        data-id="{{ $patient->id }}">
+                                                        <em class="icon ni ni-eye-fill"></em>
+                                                    </button>
+                                                    @can('admin-table')
+                                                        <button class="btn btn-warning btn-xs rounded-pill btn-dim"
+                                                            data-bs-toggle="modal" data-bs-target="#editPatientModal"
+                                                            data-modal-title="Edit Konseptor" data-id="{{ $patient->id }}">
+                                                            <em class="icon ni ni-edit-fill"></em>
+                                                        </button>
+                                                        <button class="btn btn-danger btn-xs rounded-pill btn-dim"
+                                                            data-bs-toggle="modal" data-bs-target="#deletePatientModal"
+                                                            data-id="{{ $patient->id }}">
+                                                            <em class="icon ni ni-trash-fill"></em>
+                                                        </button>
+                                                    @endcan
+                                                    @can('admin-monitoring-all')
+                                                        <button
+                                                            class="btn  {{ $patient->is_printed === 'true' ? 'btn-dark' : 'btn-danger' }} btn-xs rounded-pill btn-dim "
+                                                            data-bs-toggle="modal" data-bs-target="#printPatientModal"
+                                                            data-id="{{ $patient->id }}">
+                                                            <em class="icon ni ni-printer-fill"></em>
+                                                        </button>
+                                                    @endcan
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="components-preview wide-xl mx-auto col-md-6">
+                    <div class="nk-block nk-block-lg">
+                        <div class="nk-block-head">
+                        </div>
+                        <div class="card card-bordered card-preview">
+                            <div class="card-inner">
+                                @can('admin-table')
+                                    <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal"
+                                        data-bs-target="#addPatientModal" data-modal-title="Tambah Pasien">
+                                        <span class="ni ni-plus"></span>
+                                        <span class="ms-1">Tambah pasien</span>
+                                    </button>
+                                @endcan
+                                <table class="datatable-init-export table-responsive table-bordered nowrap table"
+                                    data-export-title="Export">
+                                    <thead>
+                                        <tr class="table-white">
+                                            <th class="text-center" colspan="4">Meja 2</th>
+                                        </tr>
+                                        <tr class="table-white">
+                                                    <th class="text-center col-1">No</th>
+                                                    <th class="text-center col-6">Nama</th>
+                                                    <th class="text-center col-2">Usia</th>
+                                                    <th class="text-center no-export col-3">Aksi</th>
+                                                </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($patient2 as $index => $patient)
+                                            <tr>
+                                                <td class="text-center">{{ $index + 1 }}</td>
+                                                <td>{{ $patient->name }}</td>
+                                                <td class="text-center">{{ $patient->age }}</td>
+                                                <td class="text-center">
+                                                    <button class="btn btn-primary btn-xs rounded-pill btn-dim"
+                                                        data-bs-toggle="modal" data-bs-target="#showPatientModal"
+                                                        data-id="{{ $patient->id }}">
+                                                        <em class="icon ni ni-eye-fill"></em>
+                                                    </button>
+                                                    @can('admin-table')
+                                                        <button class="btn btn-warning btn-xs rounded-pill btn-dim"
+                                                            data-bs-toggle="modal" data-bs-target="#editPatientModal"
+                                                            data-modal-title="Edit Konseptor" data-id="{{ $patient->id }}">
+                                                            <em class="icon ni ni-edit-fill"></em>
+                                                        </button>
+                                                        <button class="btn btn-danger btn-xs rounded-pill btn-dim"
+                                                            data-bs-toggle="modal" data-bs-target="#deletePatientModal"
+                                                            data-id="{{ $patient->id }}">
+                                                            <em class="icon ni ni-trash-fill"></em>
+                                                        </button>
+                                                    @endcan
+                                                    @can('admin-monitoring-all')
+                                                        <button
+                                                            class="btn  {{ $patient->is_printed === 'true' ? 'btn-dark' : 'btn-danger' }} btn-xs rounded-pill btn-dim "
+                                                            data-bs-toggle="modal" data-bs-target="#printPatientModal"
+                                                            data-id="{{ $patient->id }}">
+                                                            <em class="icon ni ni-printer-fill"></em>
+                                                        </button>
+                                                    @endcan
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endcan
+
+    <div class="components-preview wide-xl mx-auto">
         <div class="nk-block nk-block-lg">
             <div class="nk-block-head">
-                <div class="nk-block-head-content">
-                    <h4 class="nk-block-title">Data pasien
-                    </h4>
-                </div>
             </div>
             <div class="card card-bordered card-preview">
                 <div class="card-inner">
@@ -104,43 +276,406 @@
                     @endcan
                     <table class="datatable-init-export table-responsive table-bordered nowrap table"
                         data-export-title="Export">
-                        <thead>
-                            <tr class="table-light">
-                                <th class="text-center">No</th>
-                                <th class="text-center">Nama</th>
-                                <th class="text-center no-export">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($patients as $index => $patient)
-                                <tr>
-                                    <td class="text-center">{{ $index + 1 }}</td>
-                                    <td>{{ $patient->name }}</td>
-                                    <td class="text-center">
-                                        <button class="btn btn-primary btn-xs rounded-pill btn-dim" data-bs-toggle="modal"
-                                            data-bs-target="#showPatientModal" data-id="{{ $patient->id }}">
-                                            <em class="icon ni ni-eye-fill"></em>
-                                        </button>
-                                        @can('admin-table')
-                                            <button class="btn btn-warning btn-xs rounded-pill btn-dim" data-bs-toggle="modal"
-                                                data-bs-target="#editPatientModal" data-modal-title="Edit Konseptor"
-                                                data-id="{{ $patient->id }}">
-                                                <em class="icon ni ni-edit-fill"></em>
-                                            </button>
-                                            <button class="btn btn-danger btn-xs rounded-pill btn-dim" data-bs-toggle="modal"
-                                                data-bs-target="#deletePatientModal" data-id="{{ $patient->id }}">
-                                                <em class="icon ni ni-trash-fill"></em>
-                                            </button>
-                                        @endcan
-                                    </td>
+                        @if (auth()->user()->role === 'Admin Monitoring All')
+                            <thead>
+                                <tr class="table-white">
+                                    <th class="text-center" colspan="4">Meja 3</th>
                                 </tr>
-                            @endforeach
+                                <tr class="table-white">
+                                                    <th class="text-center col-1">No</th>
+                                                    <th class="text-center col-6">Nama</th>
+                                                    <th class="text-center col-2">Usia</th>
+                                                    <th class="text-center no-export col-3">Aksi</th>
+                                                </tr>
+                            </thead>
+                        @else
+                            <thead>
+                                <tr class="table-white">
+                                                    <th class="text-center col-1">No</th>
+                                                    <th class="text-center col-6">Nama</th>
+                                                    <th class="text-center col-2">Usia</th>
+                                                    <th class="text-center no-export col-3">Aksi</th>
+                                                </tr>
+                            </thead>
+                        @endif
+                        <tbody>
+                            @if (auth()->user()->role === 'Admin Monitoring All')
+                                @foreach ($patient3 as $index => $patient)
+                                    <tr>
+                                        <td class="text-center">{{ $index + 1 }}</td>
+                                        <td>{{ $patient->name }}</td>
+                                        <td class="text-center">{{ $patient->age }}</td>
+                                        <td class="text-center">
+                                            <button class="btn btn-primary btn-xs rounded-pill btn-dim"
+                                                data-bs-toggle="modal" data-bs-target="#showPatientModal"
+                                                data-id="{{ $patient->id }}">
+                                                <em class="icon ni ni-eye-fill"></em>
+                                            </button>
+                                            @can('admin-table')
+                                                <button class="btn btn-warning btn-xs rounded-pill btn-dim"
+                                                    data-bs-toggle="modal" data-bs-target="#editPatientModal"
+                                                    data-modal-title="Edit Konseptor" data-id="{{ $patient->id }}">
+                                                    <em class="icon ni ni-edit-fill"></em>
+                                                </button>
+                                                <button class="btn btn-danger btn-xs rounded-pill btn-dim"
+                                                    data-bs-toggle="modal" data-bs-target="#deletePatientModal"
+                                                    data-id="{{ $patient->id }}">
+                                                    <em class="icon ni ni-trash-fill"></em>
+                                                </button>
+                                            @endcan
+                                            @can('admin-monitoring-all')
+                                                <button
+                                                    class="btn  {{ $patient->is_printed === 'true' ? 'btn-dark' : 'btn-danger' }} btn-xs rounded-pill btn-dim "
+                                                    data-bs-toggle="modal" data-bs-target="#printPatientModal"
+                                                    data-id="{{ $patient->id }}">
+                                                    <em class="icon ni ni-printer-fill"></em>
+                                                </button>
+                                            @endcan
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @else
+                                @foreach ($patients as $index => $patient)
+                                    <tr>
+                                        <td class="text-center">{{ $index + 1 }}</td>
+                                        <td>{{ $patient->name }}</td>
+                                        <td class="text-center">{{ $patient->age }}</td>
+                                        @can('admin-monitoring-all')
+                                            <td>{{ $patient->table_number }}</td>
+                                        @endcan
+                                        <td class="text-center">
+                                            <button class="btn btn-primary btn-xs rounded-pill btn-dim"
+                                                data-bs-toggle="modal" data-bs-target="#showPatientModal"
+                                                data-id="{{ $patient->id }}">
+                                                <em class="icon ni ni-eye-fill"></em>
+                                            </button>
+                                            @can('admin-table')
+                                                <button class="btn btn-warning btn-xs rounded-pill btn-dim"
+                                                    data-bs-toggle="modal" data-bs-target="#editPatientModal"
+                                                    data-modal-title="Edit Konseptor" data-id="{{ $patient->id }}">
+                                                    <em class="icon ni ni-edit-fill"></em>
+                                                </button>
+                                                <button class="btn btn-danger btn-xs rounded-pill btn-dim"
+                                                    data-bs-toggle="modal" data-bs-target="#deletePatientModal"
+                                                    data-id="{{ $patient->id }}">
+                                                    <em class="icon ni ni-trash-fill"></em>
+                                                </button>
+                                            @endcan
+                                            @can('admin-monitoring-all')
+                                                <button
+                                                    class="btn  {{ $patient->is_printed ? 'btn-dark' : 'btn-danger' }} btn-xs rounded-pill btn-dim "
+                                                    data-bs-toggle="modal" data-bs-target="#printPatientModal"
+                                                    data-id="{{ $patient->id }}">
+                                                    <em class="icon ni ni-printer-fill"></em>
+                                                </button>
+                                            @endcan
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @endif
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
+
+    @can('admin-monitoring-all')
+        <div class="card card-bordered card-preview">
+            <div class="card-inner">
+                <ul class="nav nav-tabs mt-n3">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-bs-toggle="tab" href="#tabItem1">Meja 1</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#tabItem2">Meja 2</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#tabItem3">Meja 3</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tabItem1">
+                        <div class="components-preview wide-xl mx-auto">
+                            <div class="nk-block nk-block-lg">
+                                <div class="nk-block-head">
+                                </div>
+                                <div class="card card-bordered card-preview">
+                                    <div class="card-inner">
+                                        @can('admin-table')
+                                            <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal"
+                                                data-bs-target="#addPatientModal" data-modal-title="Tambah Pasien">
+                                                <span class="ni ni-plus"></span>
+                                                <span class="ms-1">Tambah pasien</span>
+                                            </button>
+                                        @endcan
+                                        <table class="datatable-init-export table-responsive table-bordered nowrap table"
+                                            data-export-title="Export">
+                                            <thead>
+                                                <tr class="table-white">
+                                                    <th class="text-center" colspan="4">Meja 1</th>
+                                                </tr>
+                                                <tr class="table-white">
+                                                    <th class="text-center col-1">No</th>
+                                                    <th class="text-center col-6">Nama</th>
+                                                    <th class="text-center col-2">Usia</th>
+                                                    <th class="text-center no-export col-3">Aksi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($patient1 as $index => $patient)
+                                                    <tr>
+                                                        <td class="text-center">{{ $index + 1 }}</td>
+                                                        <td>{{ $patient->name }}</td>
+                                                        <td class="text-center">{{ $patient->age }}</td>
+                                                        <td class="text-center">
+                                                            <button class="btn btn-primary btn-xs rounded-pill btn-dim"
+                                                                data-bs-toggle="modal" data-bs-target="#showPatientModal"
+                                                                data-id="{{ $patient->id }}">
+                                                                <em class="icon ni ni-eye-fill"></em>
+                                                            </button>
+                                                            @can('admin-table')
+                                                                <button class="btn btn-warning btn-xs rounded-pill btn-dim"
+                                                                    data-bs-toggle="modal" data-bs-target="#editPatientModal"
+                                                                    data-modal-title="Edit Konseptor"
+                                                                    data-id="{{ $patient->id }}">
+                                                                    <em class="icon ni ni-edit-fill"></em>
+                                                                </button>
+                                                                <button class="btn btn-danger btn-xs rounded-pill btn-dim"
+                                                                    data-bs-toggle="modal" data-bs-target="#deletePatientModal"
+                                                                    data-id="{{ $patient->id }}">
+                                                                    <em class="icon ni ni-trash-fill"></em>
+                                                                </button>
+                                                            @endcan
+                                                            @can('admin-monitoring-all')
+                                                                <button
+                                                                    class="btn  {{ $patient->is_printed === 'true' ? 'btn-dark' : 'btn-danger' }} btn-xs rounded-pill btn-dim "
+                                                                    data-bs-toggle="modal" data-bs-target="#printPatientModal"
+                                                                    data-id="{{ $patient->id }}">
+                                                                    <em class="icon ni ni-printer-fill"></em>
+                                                                </button>
+                                                            @endcan
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="tabItem2">
+                        <div class="components-preview wide-xl mx-auto">
+                            <div class="nk-block nk-block-lg">
+                                <div class="nk-block-head">
+                                </div>
+                                <div class="card card-bordered card-preview">
+                                    <div class="card-inner">
+                                        @can('admin-table')
+                                            <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal"
+                                                data-bs-target="#addPatientModal" data-modal-title="Tambah Pasien">
+                                                <span class="ni ni-plus"></span>
+                                                <span class="ms-1">Tambah pasien</span>
+                                            </button>
+                                        @endcan
+                                        <table class="datatable-init-export table-responsive table-bordered nowrap table"
+                                            data-export-title="Export">
+                                            <thead>
+                                                <tr class="table-white">
+                                                    <th class="text-center" colspan="4">Meja 2</th>
+                                                </tr>
+                                                <tr class="table-white">
+                                                    <th class="text-center col-1">No</th>
+                                                    <th class="text-center col-6">Nama</th>
+                                                    <th class="text-center col-2">Usia</th>
+                                                    <th class="text-center no-export col-3">Aksi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($patient2 as $index => $patient)
+                                                    <tr>
+                                                        <td class="text-center">{{ $index + 1 }}</td>
+                                                        <td>{{ $patient->name }}</td>
+                                                        <td class="text-center">{{ $patient->age }}</td>
+                                                        <td class="text-center">
+                                                            <button class="btn btn-primary btn-xs rounded-pill btn-dim"
+                                                                data-bs-toggle="modal" data-bs-target="#showPatientModal"
+                                                                data-id="{{ $patient->id }}">
+                                                                <em class="icon ni ni-eye-fill"></em>
+                                                            </button>
+                                                            @can('admin-table')
+                                                                <button class="btn btn-warning btn-xs rounded-pill btn-dim"
+                                                                    data-bs-toggle="modal" data-bs-target="#editPatientModal"
+                                                                    data-modal-title="Edit Konseptor"
+                                                                    data-id="{{ $patient->id }}">
+                                                                    <em class="icon ni ni-edit-fill"></em>
+                                                                </button>
+                                                                <button class="btn btn-danger btn-xs rounded-pill btn-dim"
+                                                                    data-bs-toggle="modal" data-bs-target="#deletePatientModal"
+                                                                    data-id="{{ $patient->id }}">
+                                                                    <em class="icon ni ni-trash-fill"></em>
+                                                                </button>
+                                                            @endcan
+                                                            @can('admin-monitoring-all')
+                                                                <button
+                                                                    class="btn  {{ $patient->is_printed === 'true' ? 'btn-dark' : 'btn-danger' }} btn-xs rounded-pill btn-dim "
+                                                                    data-bs-toggle="modal" data-bs-target="#printPatientModal"
+                                                                    data-id="{{ $patient->id }}">
+                                                                    <em class="icon ni ni-printer-fill"></em>
+                                                                </button>
+                                                            @endcan
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="tabItem3">
+                        <div class="components-preview wide-xl mx-auto">
+                            <div class="nk-block nk-block-lg">
+                                <div class="nk-block-head">
+                                </div>
+                                <div class="card card-bordered card-preview">
+                                    <div class="card-inner">
+                                        @can('admin-table')
+                                            <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal"
+                                                data-bs-target="#addPatientModal" data-modal-title="Tambah Pasien">
+                                                <span class="ni ni-plus"></span>
+                                                <span class="ms-1">Tambah pasien</span>
+                                            </button>
+                                        @endcan
+                                        <table class="datatable-init-export table-responsive table-bordered nowrap table"
+                                            data-export-title="Export">
+                                            <thead>
+                                                <tr class="table-white">
+                                                    <th class="text-center" colspan="4">Meja 3</th>
+                                                </tr>
+                                                <tr class="table-white">
+                                                    <th class="text-center col-1">No</th>
+                                                    <th class="text-center col-6">Nama</th>
+                                                    <th class="text-center col-2">Usia</th>
+                                                    <th class="text-center no-export col-3">Aksi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($patient3 as $index => $patient)
+                                                    <tr>
+                                                        <td class="text-center">{{ $index + 1 }}</td>
+                                                        <td>{{ $patient->name }}</td>
+                                                        <td class="text-center">{{ $patient->age }}</td>
+                                                        <td class="text-center">
+                                                            <button class="btn btn-primary btn-xs rounded-pill btn-dim"
+                                                                data-bs-toggle="modal" data-bs-target="#showPatientModal"
+                                                                data-id="{{ $patient->id }}">
+                                                                <em class="icon ni ni-eye-fill"></em>
+                                                            </button>
+                                                            @can('admin-table')
+                                                                <button class="btn btn-warning btn-xs rounded-pill btn-dim"
+                                                                    data-bs-toggle="modal" data-bs-target="#editPatientModal"
+                                                                    data-modal-title="Edit Konseptor"
+                                                                    data-id="{{ $patient->id }}">
+                                                                    <em class="icon ni ni-edit-fill"></em>
+                                                                </button>
+                                                                <button class="btn btn-danger btn-xs rounded-pill btn-dim"
+                                                                    data-bs-toggle="modal" data-bs-target="#deletePatientModal"
+                                                                    data-id="{{ $patient->id }}">
+                                                                    <em class="icon ni ni-trash-fill"></em>
+                                                                </button>
+                                                            @endcan
+                                                            @can('admin-monitoring-all')
+                                                                <button
+                                                                    class="btn  {{ $patient->is_printed === 'true' ? 'btn-dark' : 'btn-danger' }} btn-xs rounded-pill btn-dim "
+                                                                    data-bs-toggle="modal" data-bs-target="#printPatientModal"
+                                                                    data-id="{{ $patient->id }}">
+                                                                    <em class="icon ni ni-printer-fill"></em>
+                                                                </button>
+                                                            @endcan
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endcan
+
+    @can('admin-table')
+        <div class="components-preview wide-xl mx-auto">
+            <div class="nk-block nk-block-lg">
+                <div class="nk-block-head">
+                </div>
+                <div class="card card-bordered card-preview">
+                    <div class="card-inner">
+                        @can('admin-table')
+                            <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal"
+                                data-bs-target="#addPatientModal" data-modal-title="Tambah Pasien">
+                                <span class="ni ni-plus"></span>
+                                <span class="ms-1">Tambah pasien</span>
+                            </button>
+                        @endcan
+                        <table class="datatable-init-export table-responsive table-bordered nowrap table"
+                            data-export-title="Export">
+                            <thead>
+                                <tr class="table-white">
+                                    <th class="text-center col-1">No</th>
+                                    <th class="text-center col-6">Nama</th>
+                                    <th class="text-center col-2">Usia</th>
+                                    <th class="text-center no-export col-3">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($patients as $index => $patient)
+                                    <tr>
+                                        <td class="text-center">{{ $index + 1 }}</td>
+                                        <td>{{ $patient->name }}</td>
+                                        <td class="text-center">{{ $patient->age }}</td>
+                                        <td class="text-center">
+                                            <button class="btn btn-primary btn-xs rounded-pill btn-dim" data-bs-toggle="modal"
+                                                data-bs-target="#showPatientModal" data-id="{{ $patient->id }}">
+                                                <em class="icon ni ni-eye-fill"></em>
+                                            </button>
+                                            @can('admin-table')
+                                                <button class="btn btn-warning btn-xs rounded-pill btn-dim" data-bs-toggle="modal"
+                                                    data-bs-target="#editPatientModal" data-modal-title="Edit Konseptor"
+                                                    data-id="{{ $patient->id }}">
+                                                    <em class="icon ni ni-edit-fill"></em>
+                                                </button>
+                                                <button class="btn btn-danger btn-xs rounded-pill btn-dim" data-bs-toggle="modal"
+                                                    data-bs-target="#deletePatientModal" data-id="{{ $patient->id }}">
+                                                    <em class="icon ni ni-trash-fill"></em>
+                                                </button>
+                                            @endcan
+                                            @can('admin-monitoring-all')
+                                                <button
+                                                    class="btn  {{ $patient->is_printed === 'true' ? 'btn-dark' : 'btn-danger' }} btn-xs rounded-pill btn-dim "
+                                                    data-bs-toggle="modal" data-bs-target="#printPatientModal"
+                                                    data-id="{{ $patient->id }}">
+                                                    <em class="icon ni ni-printer-fill"></em>
+                                                </button>
+                                            @endcan
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endcan
+
+
 
     {{-- Add Modal --}}
     <div class="modal fade" id="addPatientModal">
@@ -157,7 +692,8 @@
                         @csrf
                         <h5 class="mb-3">Identitas</h5>
                         <div class="form-group row">
-                            <label for="add_name" class="col-md-4 col-form-label">Nama Pasien :</label>
+                            <label for="add_name" class="col-md-4 col-form-label">Nama Pasien
+                                :</label>
                             <div class="col-md-8">
                                 <div class="form-control-wrap">
                                     <input type="text" class="form-control" id="add_name" name="name"
@@ -166,7 +702,8 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="add_age" class="col-md-4 col-form-label">Umur Pasien :</label>
+                            <label for="add_age" class="col-md-4 col-form-label">Umur Pasien
+                                :</label>
                             <div class="col-md-8">
                                 <div class="form-control-wrap">
                                     <input type="number" class="form-control" id="add_age" name="age"
@@ -198,7 +735,8 @@
                         </div>
 
                         <div class="form-group row mt-3">
-                            <label for="add_address" class="col-md-4 col-form-label">Alamat Pasien :</label>
+                            <label for="add_address" class="col-md-4 col-form-label">Alamat Pasien
+                                :</label>
                             <div class="col-md-8">
                                 <div class="form-control-wrap">
                                     <textarea type="text" class="form-control" id="add_address" name="address" placeholder="Masukkan alamat pasien"
@@ -217,7 +755,8 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="add_blood_glucose" class="col-md-4 col-form-label">Gula darah :</label>
+                            <label for="add_blood_glucose" class="col-md-4 col-form-label">Gula
+                                darah :</label>
                             <div class="col-md-8">
                                 <div class="form-control-wrap">
                                     <input type="text" class="form-control" id="add_blood_glucose"
@@ -226,7 +765,8 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="add_uric_acid" class="col-md-4 col-form-label">Asam urat :</label>
+                            <label for="add_uric_acid" class="col-md-4 col-form-label">Asam urat
+                                :</label>
                             <div class="col-md-8">
                                 <div class="form-control-wrap">
                                     <input type="text" class="form-control" id="add_uric_acid" name="uric_acid"
@@ -267,7 +807,8 @@
                     <form action="" method="POST" class="form-validate is-alter" id="editForm">
                         @csrf
                         <div class="form-group row">
-                            <label for="name" class="col-md-4 col-form-label">Nama Pasien :</label>
+                            <label for="name" class="col-md-4 col-form-label">Nama Pasien
+                                :</label>
                             <div class="col-md-8">
                                 <div class="form-control-wrap">
                                     <input type="text" class="form-control" id="name" name="name"
@@ -276,7 +817,8 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="age" class="col-md-4 col-form-label">Umur Pasien :</label>
+                            <label for="age" class="col-md-4 col-form-label">Umur Pasien
+                                :</label>
                             <div class="col-md-8">
                                 <div class="form-control-wrap">
                                     <input type="number" class="form-control" id="age" name="age"
@@ -307,7 +849,8 @@
                             </div>
                         </div>
                         <div class="form-group row mt-3">
-                            <label for="add_address" class="col-md-4 col-form-label">Alamat Pasien :</label>
+                            <label for="add_address" class="col-md-4 col-form-label">Alamat Pasien
+                                :</label>
                             <div class="col-md-8">
                                 <div class="form-control-wrap">
                                     <textarea type="text" class="form-control" id="add_address" name="address" placeholder="Masukkan alamat pasien"
@@ -326,7 +869,8 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="add_blood_glucose" class="col-md-4 col-form-label">Gula darah :</label>
+                            <label for="add_blood_glucose" class="col-md-4 col-form-label">Gula
+                                darah :</label>
                             <div class="col-md-8">
                                 <div class="form-control-wrap">
                                     <input type="text" class="form-control" id="add_blood_glucose"
@@ -335,7 +879,8 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="add_uric_acid" class="col-md-4 col-form-label">Asam urat :</label>
+                            <label for="add_uric_acid" class="col-md-4 col-form-label">Asam urat
+                                :</label>
                             <div class="col-md-8">
                                 <div class="form-control-wrap">
                                     <input type="text" class="form-control" id="add_uric_acid" name="uric_acid"
@@ -376,7 +921,8 @@
                     <form action="" method="POST" class="form-validate is-alter" id="editForm">
                         @csrf
                         <div class="form-group row">
-                            <label for="name" class="col-md-4 col-form-label">Nama Pasien :</label>
+                            <label for="name" class="col-md-4 col-form-label">Nama Pasien
+                                :</label>
                             <div class="col-md-8">
                                 <div class="form-control-wrap">
                                     <input type="text" class="form-control" id="name" name="name"
@@ -385,7 +931,8 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="age" class="col-md-4 col-form-label">Umur Pasien :</label>
+                            <label for="age" class="col-md-4 col-form-label">Umur Pasien
+                                :</label>
                             <div class="col-md-8">
                                 <div class="form-control-wrap">
                                     <input type="number" class="form-control" id="age" name="age"
@@ -416,7 +963,8 @@
                             </div>
                         </div>
                         <div class="form-group row mt-3">
-                            <label for="add_address" class="col-md-4 col-form-label">Alamat Pasien :</label>
+                            <label for="add_address" class="col-md-4 col-form-label">Alamat Pasien
+                                :</label>
                             <div class="col-md-8">
                                 <div class="form-control-wrap">
                                     <textarea type="text" class="form-control" id="add_address" name="address" placeholder="Masukkan alamat pasien"
@@ -435,7 +983,8 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="add_blood_glucose" class="col-md-4 col-form-label">Gula darah :</label>
+                            <label for="add_blood_glucose" class="col-md-4 col-form-label">Gula
+                                darah :</label>
                             <div class="col-md-8">
                                 <div class="form-control-wrap">
                                     <input type="text" class="form-control" id="add_blood_glucose"
@@ -444,7 +993,8 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="add_uric_acid" class="col-md-4 col-form-label">Asam urat :</label>
+                            <label for="add_uric_acid" class="col-md-4 col-form-label">Asam urat
+                                :</label>
                             <div class="col-md-8">
                                 <div class="form-control-wrap">
                                     <input type="text" class="form-control" id="add_uric_acid" name="uric_acid"
@@ -460,16 +1010,7 @@
                                         placeholder="Masukkan kolesterol pasien" required>
                                 </div>
                             </div>
-
                         </div>
-                        @can('admin-monitoring-all')
-                        <div class="form-group text-end">
-                            <a href="" target="_blank"
-                                class="btn btn-primary btn-dim print">
-                                <em class="icon ni ni-printer-fill me-1"></em>Cetak
-                            </a>
-                        </div>
-                        @endcan
                     </form>
                 </div>
             </div>
@@ -493,6 +1034,30 @@
                         <div id="deleteMessage"></div>
                         <div class="form-group text-end mt-3">
                             <button type="submit" class="btn btn-lg btn-danger">Hapus</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Delete Modal --}}
+    <div class="modal fade" id="printPatientModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Cetak Pasien</h5>
+                    <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <em class="icon ni ni-cross"></em>
+                    </a>
+                </div>
+                <div class="modal-body">
+                    <form class="form-validate is-alter" id="printForm">
+                        @csrf
+                        <div id="printMessage"></div>
+                        <div class="form-group text-end mt-3">
+                            <button type="submit" class="btn btn-lg btn-danger"><em
+                                    class="icon ni ni-printer-fill me-1"></em>Cetak</button>
                         </div>
                     </form>
                 </div>

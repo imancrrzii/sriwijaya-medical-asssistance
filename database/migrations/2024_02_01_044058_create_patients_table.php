@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('uric_acid');
             $table->string('cholesterol');
             $table->integer('table_number');
+            $table->enum('is_printed', ['true', 'false'])->default('false');
             $table->timestamps();
         });
     }

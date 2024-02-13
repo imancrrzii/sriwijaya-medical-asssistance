@@ -29,9 +29,6 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('admin-table-3', function (User $user) {
             return $user->role == 'Admin Table 3';
         });
-        Gate::define('admin-table-4', function (User $user) {
-            return $user->role == 'Admin Table 4';
-        });
         Gate::define('admin-monitoring-all', function (User $user) {
             return $user->role == 'Admin Monitoring All';
         });
@@ -43,9 +40,6 @@ class AuthServiceProvider extends ServiceProvider
         });
         Gate::define('admin-table-3-monitoring-all', function (User $user) {
             return $user->role == 'Admin Table 3' || $user->role == 'Admin Monitoring All';
-        });
-        Gate::define('admin-table-4-monitoring-all', function (User $user) {
-            return $user->role == 'Admin Table 4' || $user->role == 'Admin Monitoring All';
         });
         Gate::define('admin-table', function (User $user) {
             return $user->role == 'Admin Table 1' || $user->role == 'Admin Table 2' || $user->role == 'Admin Table 3' || $user->role == 'Admin Table 4';

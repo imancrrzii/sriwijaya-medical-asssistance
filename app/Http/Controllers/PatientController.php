@@ -6,27 +6,59 @@ use App\Models\Patient;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class PatientController extends Controller
 {
-    public function index($tableNumber)
+    // public function index($tableNumber = null)
+    // {
+    //     $today = Carbon::today()->toDateString();
+    //     $userRole = Auth::user()->role;
+
+    //     if (Gate::allows('admin-monitoring-all')) {
+    //         $title = 'Data Pasien untuk Admin Monitoring All';
+    //         $patients = Patient::whereDate('created_at', $today)->get();
+    //     } else {
+    //         if ($tableNumber === null) {
+    //             abort(403, 'Forbidden');
+    //         }
+
+    //         $title = 'Data Pasien Meja ' . $tableNumber;
+    //         $patients = Patient::where('table_number', $tableNumber)->whereDate('created_at', $today)->get();
+    //     }
+
+    //     return view('patient.index', compact('title', 'patients'));
+    // }
+
+    public function index()
     {
-        $isAdminMonitoringAll = Auth::user()->role === 'Admin Monitoring All';
-
-        if (!$isAdminMonitoringAll) {
-            $userTableNumber = $this->getTableNumberFromRole(Auth::user()->role);
-
-            if ($userTableNumber != $tableNumber) {
-                abort(403, 'Forbidden');
-            }
-        }
-
-        $title = 'Data Pasien Meja ' . $tableNumber;
-
         $today = Carbon::today()->toDateString();
-        $patients = Patient::where('table_number', $tableNumber)->whereDate('created_at', $today)->get();
+        $userRole = Auth::user()->role;
 
-        return view('patient.index', compact('title', 'patients'));
+        if ($userRole === 'Admin Monitoring All') {
+            $title = 'Data Pasien untuk Admin Monitoring All';
+            $patient1 = Patient::where('table_number', 1)->whereDate('created_at', $today)->get();
+            $patient2 = Patient::where('table_number', 2)->whereDate('created_at', $today)->get();
+            $patient3 = Patient::where('table_number', 3)->whereDate('created_at', $today)->get();
+            return view('patient.index', compact('title', 'patient1', 'patient2', 'patient3'));
+        } else {
+            $tableNumber = $this->getTableNumberFromRole($userRole);
+            $title = 'Data Pasien Meja ' . $tableNumber;
+            $patients = Patient::where('table_number', $tableNumber)->whereDate('created_at', $today)->get();
+            return view('patient.index', compact('title', 'patients'));
+        }
+    }
+
+    protected function getTableNumberFromRole($role)
+    {
+        $tableNumbers = [
+            'Admin Table 1' => 1,
+            'Admin Table 2' => 2,
+            'Admin Table 3' => 3,
+            // Tambahkan sesuai kebutuhan
+        ];
+
+        return $tableNumbers[$role] ?? null;
     }
 
     public function store(Request $request)
@@ -51,17 +83,17 @@ class PatientController extends Controller
         return back()->with('success', "Data pasien berhasil ditambahkan");
     }
 
-    protected function getTableNumberFromRole($role)
-    {
-        $tableNumbers = [
-            'Admin Table 1' => 1,
-            'Admin Table 2' => 2,
-            'Admin Table 3' => 3,
-            'Admin Table 4' => 4,
-        ];
+    // protected function getTableNumberFromRole($role)
+    // {
+    //     $tableNumbers = [
+    //         'Admin Table 1' => 1,
+    //         'Admin Table 2' => 2,
+    //         'Admin Table 3' => 3,
+    //         'Admin Table 4' => 4,
+    //     ];
 
-        return $tableNumbers[$role] ?? null;
-    }
+    //     return $tableNumbers[$role] ?? null;
+    // }
 
     public function show($id)
     {
@@ -103,10 +135,16 @@ class PatientController extends Controller
 
     public function printPatient($id)
     {
-        $title = "print";
         $patient = Patient::findOrFail($id);
+        $patient->is_printed = 'true';
+        $patient->save();
+        return response()->json(['success' => true]);
 
-        return view('patient.print', compact('patient', 'title'));
+    }
+    public function showPrintView($id)
+    {
+        $patient = Patient::findOrFail($id);
+        return view('patient.print', compact('patient'));
     }
     public function getPatient($id)
     {

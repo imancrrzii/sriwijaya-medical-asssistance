@@ -7,8 +7,6 @@
         $avatarStyle = 'bg-gray-400 text-black';
     } elseif (Gate::check('admin-table-3')) {
         $avatarStyle = 'bg-gray-500 text-white';
-    } elseif (Gate::check('admin-table-4')) {
-        $avatarStyle = 'bg-gray-600 text-white';
     } else {
         $avatarStyle = 'bg-primary';
     }
