@@ -16,13 +16,15 @@ return new class extends Migration
             $table->string('name');
             $table->integer('age');
             $table->string('address');
-            $table->string('gender');
-            $table->string('blood_pressure');
-            $table->string('blood_glucose');
-            $table->string('uric_acid');
-            $table->string('cholesterol');
+            $table->enum('gender', ['Laki-laki', 'Perempuan']);
+            $table->decimal('systolic_blood_pressure')->nullable();
+            $table->decimal('diastolic_blood_pressure')->nullable();
+            $table->enum('blood_glucose_type', ['GDP', 'GDS'])->nullable();
+            $table->decimal('blood_glucose')->nullable();
+            $table->decimal('uric_acid')->nullable();
+            $table->decimal('cholesterol')->nullable();
             $table->integer('table_number');
-            $table->enum('is_printed', ['true', 'false'])->default('false');
+            $table->boolean('is_printed')->default(false);
             $table->timestamps();
         });
     }

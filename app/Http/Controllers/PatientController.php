@@ -10,25 +10,6 @@ use Illuminate\Support\Facades\Gate;
 
 class PatientController extends Controller
 {
-    // public function index($tableNumber = null)
-    // {
-    //     $today = Carbon::today()->toDateString();
-    //     $userRole = Auth::user()->role;
-
-    //     if (Gate::allows('admin-monitoring-all')) {
-    //         $title = 'Data Pasien untuk Admin Monitoring All';
-    //         $patients = Patient::whereDate('created_at', $today)->get();
-    //     } else {
-    //         if ($tableNumber === null) {
-    //             abort(403, 'Forbidden');
-    //         }
-
-    //         $title = 'Data Pasien Meja ' . $tableNumber;
-    //         $patients = Patient::where('table_number', $tableNumber)->whereDate('created_at', $today)->get();
-    //     }
-
-    //     return view('patient.index', compact('title', 'patients'));
-    // }
 
     public function index()
     {
@@ -55,7 +36,6 @@ class PatientController extends Controller
             'Admin Table 1' => 1,
             'Admin Table 2' => 2,
             'Admin Table 3' => 3,
-            // Tambahkan sesuai kebutuhan
         ];
 
         return $tableNumbers[$role] ?? null;
@@ -67,11 +47,13 @@ class PatientController extends Controller
             'name' => 'required|string|max:255',
             'age' => 'required|integer',
             'address' => 'required|string|max:255',
-            'gender' => 'required|string|max:255',
-            'blood_pressure' => 'required|string|max:255',
-            'blood_glucose' => 'required|string|max:255',
-            'uric_acid' => 'required|string|max:255',
-            'cholesterol' => 'required|string|max:255',
+            'gender' => 'required|string|in:Laki-laki,Perempuan',
+            'systolic_blood_pressure' => 'nullable|numeric',
+            'diastolic_blood_pressure' => 'nullable|numeric',
+            'blood_glucose_type' => 'string|in:GDP,GDS',
+            'blood_glucose' => 'nullable|numeric',
+            'uric_acid' => 'nullable|numeric',
+            'cholesterol' => 'nullable|numeric',
         ]);
 
         $role = Auth::user()->role;
@@ -82,19 +64,6 @@ class PatientController extends Controller
 
         return back()->with('success', "Data pasien berhasil ditambahkan");
     }
-
-    // protected function getTableNumberFromRole($role)
-    // {
-    //     $tableNumbers = [
-    //         'Admin Table 1' => 1,
-    //         'Admin Table 2' => 2,
-    //         'Admin Table 3' => 3,
-    //         'Admin Table 4' => 4,
-    //     ];
-
-    //     return $tableNumbers[$role] ?? null;
-    // }
-
     public function show($id)
     {
         $patient = Patient::findOrFail($id);
@@ -107,11 +76,13 @@ class PatientController extends Controller
             'name' => 'required|string|max:255',
             'age' => 'required|integer',
             'address' => 'required|string|max:255',
-            'gender' => 'required|string|max:255',
-            'blood_pressure' => 'required|string|max:255',
-            'blood_glucose' => 'required|string|max:255',
-            'uric_acid' => 'required|string|max:255',
-            'cholesterol' => 'required|string|max:255',
+            'gender' => 'required|string|in:Laki-laki,Perempuan',
+            'systolic_blood_pressure' => 'nullable|numeric',
+            'diastolic_blood_pressure' => 'nullable|numeric',
+            'blood_glucose_type' => 'string|in:GDP,GDS',
+            'blood_glucose' => 'nullable|numeric',
+            'uric_acid' => 'nullable|numeric',
+            'cholesterol' => 'nullable|numeric',
         ]);
 
         $role = Auth::user()->role;
@@ -132,23 +103,62 @@ class PatientController extends Controller
 
         return back()->with('success', "Data berhasil dihapus");
     }
-
     public function printPatient($id)
     {
         $patient = Patient::findOrFail($id);
-        $patient->is_printed = 'true';
-        $patient->save();
-        return response()->json(['success' => true]);
+        $patient->update(['is_printed' => true]);
+    
+        $this->normalizeIntegerProperties($patient);
+    
+        $patient->blood_pressure_level = $this->getBloodPressureLevel($patient->systolic_blood_pressure);
+        $patient->blood_glucose_level = $this->getBloodGlucoseLevel($patient->blood_glucose, $patient->blood_glucose_type);
+        $patient->uric_acid_level = $this->getUricAcidLevel($patient->uric_acid, $patient->gender);
+        $patient->cholesterol_level = $this->getCholesterolLevel($patient->cholesterol);
+    
+        return view('patient.print')->with('patient', $patient);
+    }
 
-    }
-    public function showPrintView($id)
-    {
-        $patient = Patient::findOrFail($id);
-        return view('patient.print', compact('patient'));
-    }
     public function getPatient($id)
     {
         $patient = Patient::find($id);
+    
+        $this->normalizeIntegerProperties($patient);
+    
         return response()->json($patient);
+    }
+    
+    private function normalizeIntegerProperties($patient)
+    {
+        $properties = ['systolic_blood_pressure', 'diastolic_blood_pressure', 'blood_glucose', 'uric_acid', 'cholesterol'];
+    
+        foreach ($properties as $property) {
+            if ($patient->$property) {
+                $patient->$property = intval($patient->$property);
+            }
+        }
+    }
+    
+    private function getBloodPressureLevel($systolicPressure)
+    {
+        return $systolicPressure > 120 ? 'Tinggi' : ($systolicPressure > 90 && $systolicPressure <= 120 ? 'Normal' : 'Rendah');
+    }
+    
+    private function getBloodGlucoseLevel($bloodGlucose, $type)
+    {
+        $threshold = ($type == 'GDP') ? 126 : 200;
+        return $bloodGlucose >= $threshold ? 'Tinggi' : ($bloodGlucose > 60 && $bloodGlucose < $threshold ? 'Normal' : 'Rendah');
+    }
+    
+    private function getUricAcidLevel($uricAcid, $gender)
+    {
+        $thresholdHigh = ($gender == 'Perempuan') ? 6 : 7.2;
+        $thresholdNormal = ($gender == 'Perempuan') ? 1.9 : 2.5;
+    
+        return $uricAcid > $thresholdHigh ? 'Tinggi' : ($uricAcid > $thresholdNormal && $uricAcid <= $thresholdHigh ? 'Normal' : 'Rendah');
+    }
+    
+    private function getCholesterolLevel($cholesterol)
+    {
+        return $cholesterol >= 200 ? 'Tinggi' : 'Normal';
     }
 }

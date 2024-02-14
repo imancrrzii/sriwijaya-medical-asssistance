@@ -12,16 +12,20 @@
     * {
         font-size: 12px;
         font-family: Arial, Helvetica, sans-serif;
-        text-transform: uppercase;
     }
 
-    body{
+    body {
         max-width: 300px;
     }
 
-    img{
+    img {
         display: block;
         margin: auto;
+    }
+
+    .content{
+        display: flex;
+        justify-content: center;
     }
 
     table {
@@ -39,13 +43,15 @@
         border-bottom: 1px dashed;
         padding: 5px 0;
         margin: 5px 0;
-    }
-    .centered{
-        text-align: center;
-        font-size: 12px;
+        text-transform: uppercase;
     }
 
-    .result{
+    .centered {
+        text-align: center;
+        font-size: 10px;
+    }
+
+    .result {
         margin-top: 10px;
     }
 </style>
@@ -56,76 +62,76 @@
         <br>JALAN AMPERA SUMATERA SELATAN
         <br>PALEMBANG SUMATERA SELATAN
     </p>
-    <table>
-        <tbody>
-            <tr>
-                <td colspan="3">
-                    <h5 class="title">Identitas</h5>
-                </td>
-
-            </tr>
-            <tr>
-                <td>Nama</td>
-                <td>:</td>
-                <td>{{ $patient->name }}</td>
-            </tr>
-            <tr>
-                <td>Usia</td>
-                <td>:</td>
-                <td>{{ $patient->age }}</td>
-            </tr>
-            <tr>
-                <td>Gender</td>
-                <td>:</td>
-                <td>{{ $patient->gender }}</td>
-            </tr>
-            <tr>
-                <td>Alamat</td>
-                <td>:</td>
-                <td>
-                    {{ $patient->address }}
-                </td>
-            </tr>
-            <tr>
-                <td colspan="3">
-                    <h5 class="title result">Hasil Pemeriksaan</h5>
-                </td>
-
-            </tr>
-            <tr>
-                <td>Tkn Drh</td>
-                <td>:</td>
-                <td>{{ $patient->blood_pressure }}</td>
-            </tr>
-            <tr>
-                <td>Gula Drh</td>
-                <td>:</td>
-                <td>{{ $patient->blood_glucose }}</td>
-            </tr>
-            <tr>
-                <td>Asam Urat</td>
-                <td>:</td>
-                <td class="description">{{ $patient->uric_acid }}</td>
-            </tr>
-            <tr>
-                <td>Kolesterol</td>
-                <td>:</td>
-                <td>
-                    {{ $patient->cholesterol }}
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
+    <div class="content">
+        <table>
+            <tbody>
+                <tr>
+                    <td colspan="3">
+                        <h5 class="title">Identitas</h5>
+                    </td>
+    
+                </tr>
+                <tr>
+                    <td>Nama</td>
+                    <td>:</td>
+                    <td>{{ $patient->name }}</td>
+                </tr>
+                <tr>
+                    <td>Usia</td>
+                    <td>:</td>
+                    <td>{{ $patient->age }}</td>
+                </tr>
+                <tr>
+                    <td>Gender</td>
+                    <td>:</td>
+                    <td>{{ $patient->gender }}</td>
+                </tr>
+                <tr>
+                    <td>Alamat</td>
+                    <td>:</td>
+                    <td>
+                        {{ $patient->address }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        <h5 class="title result">Hasil Pemeriksaan</h5>
+                    </td>
+    
+                </tr>
+                <tr>
+                    <td>TD</td>
+                    <td>:</td>
+                    <td>
+                        {{ $patient->systolic_blood_pressure ? $patient->systolic_blood_pressure . '/' . $patient->diastolic_blood_pressure . ' mmHg' : '-' }} ({{$patient->blood_pressure_level}})
+                    </td>
+                </tr>
+                <tr>
+                    <td>GD</td>
+                    <td>:</td>
+                    <td>{{ $patient->blood_glucose ? $patient->blood_glucose . ' mg/dL' : '-' }} ({{$patient->blood_glucose_level}})</td>
+                </tr>
+                <tr>
+                    <td>Asam Urat</td>
+                    <td>:</td>
+                    <td>{{ $patient->uric_acid ? $patient->uric_acid . ' mg/dL' : '-' }} ({{$patient->uric_acid_level}})</td>
+                </tr>
+                <tr>
+                    <td>Kolesterol</td>
+                    <td>:</td>
+                    <td>
+                        {{ $patient->cholesterol ? $patient->cholesterol . ' mg/dL' : '-' }} ({{$patient->cholesterol_level}})
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
     <script>
         function printPromot() {
             window.print();
         }
     </script>
-
-
-
 </body>
 
 </html>

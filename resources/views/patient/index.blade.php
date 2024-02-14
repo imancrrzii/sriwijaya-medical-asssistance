@@ -17,10 +17,19 @@
                     form.find('input[name="gender"][value="' + data.gender + '"]').prop('checked',
                         true);
                     form.find('#add_address').val(data.address);
-                    form.find('#add_blood_pressure').val(data.blood_pressure);
-                    form.find('#add_blood_glucose').val(data.blood_glucose);
-                    form.find('#add_uric_acid').val(data.uric_acid);
-                    form.find('#add_cholesterol').val(data.cholesterol);
+                    form.find('#systolic_blood_pressure').val(data.systolic_blood_pressure !==
+                        null ? data.systolic_blood_pressure : '-');
+                    form.find('#diastolic_blood_pressure').val(data.diastolic_blood_pressure !==
+                        null ? data.diastolic_blood_pressure : '-');
+                    form.find('input[name="blood_glucose_type"][value="' + data.blood_glucose_type +
+                        '"]').prop('checked',
+                        true);
+                    form.find('#add_blood_glucose').val(data.blood_glucose !== null ? data
+                        .blood_glucose : '-');
+                    form.find('#add_uric_acid').val(data.uric_acid !== null ? data.uric_acid : '-');
+                    form.find('#add_cholesterol').val(data.cholesterol !== null ? data.cholesterol :
+                        '-');
+
 
                 });
 
@@ -43,12 +52,28 @@
                     form.find('input[name="gender"][value="' + data.gender + '"]').prop('checked',
                         true);
                     form.find('#add_address').val(data.address);
-                    form.find('#add_blood_pressure').val(data.blood_pressure);
-                    form.find('#add_blood_glucose').val(data.blood_glucose);
-                    form.find('#add_uric_acid').val(data.uric_acid);
-                    form.find('#add_cholesterol').val(data.cholesterol);
+                    form.find('#systolic_blood_pressure').val(data.systolic_blood_pressure !==
+                        null ? data.systolic_blood_pressure : '-');
+                    form.find('#diastolic_blood_pressure').val(data.diastolic_blood_pressure !==
+                        null ? data.diastolic_blood_pressure : '-');
+                    form.find('input[name="blood_glucose_type"][value="' + data.blood_glucose_type +
+                        '"]').prop('checked',
+                        true);
+                    form.find('#add_blood_glucose').val(data.blood_glucose !== null ? data
+                        .blood_glucose : '-');
+                    form.find('#add_uric_acid').val(data.uric_acid !== null ? data.uric_acid : '-');
+                    form.find('#add_cholesterol').val(data.cholesterol !== null ? data.cholesterol :
+                        '-');
                 });
             });
+            $('#editForm').submit(function() {
+                $('.remove-dash').each(function() {
+                    var inputValue = $(this).val();
+                    $(this).val(inputValue.replace(/-/g, ''));
+                });
+            });
+
+
 
             $(document).on('show.bs.modal', '#deletePatientModal', async function(event) {
                 const button = $(event.relatedTarget);
@@ -72,40 +97,43 @@
 
                 form.attr('action', '{{ route('patient.delete', ':id') }}'.replace(':id', id));
             });
-            $(document).on('show.bs.modal', '#printPatientModal', async function(event) {
-                const button = $(event.relatedTarget);
-                const id = button.data('id');
-                const modal = $(this);
-                const form = modal.find('#printForm');
-
-                $.ajax({
-                    url: '{{ route('patient.get', ':id') }}'.replace(':id', id),
-                    type: 'GET',
-                    dataType: 'json',
-                    success: function(data) {
-                        form.find('#printMessage').html(
-                            `Anda yakin ingin mencetak data <strong>${data.name}</strong>? Jika Anda menekan tombol cetak di bawah ini, itu akan dianggap sebagai persetujuan Anda dan sistem akan secara otomatis menyimpan bahwa data ini telah dicetak.`
-                        )
-                    },
-                    error: function(xhr, status, error) {
-                        alert('Data tidak ditemukan');
-                    }
-                });
-
-                form.attr('action', '{{ route('patient.print', ':id') }}'.replace(':id', id));
-            });
-
-            $('#printForm').submit(function(event) {
-                event.preventDefault();
-                const form = $(this);
-                const id = form.attr('action').split('/').pop();
-
-                $.post(form.attr('action'), form.serialize(), function(response) {
-                    window.location.href = 'patient/showPrint' + '/' + id;
-                });
-            });
-
         });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('.datatable-wrap').each(function(index) {
+                const id = 'datatable-' + index;
+                $(this).attr('id', id);
+                const datatableWrap = $("#" + id);
+                const wrappingDiv = $("<div>").addClass("w-100").css("overflow-x",
+                    "scroll");
+                datatableWrap.children().appendTo(wrappingDiv);
+                datatableWrap.append(wrappingDiv);
+            });
+        });
+        function printAndPreview(id) {
+            fetch(`{{ route('patient.print', ':id') }}`.replace(':id', id), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        return response.text();
+                    }
+                    throw new Error('Network response was not ok.');
+                })
+                .then(data => {
+                    const previewWindow = window.open('', '_blank');
+                    previewWindow.document.write(data);
+                    previewWindow.document.close();
+                })
+                .catch(error => {
+                    console.error('There was an error with the fetch operation:', error);
+                });
+        }
     </script>
     @if (session()->has('success'))
         <script>
@@ -122,485 +150,202 @@
     @can('admin-monitoring-all')
         <div class="col-md-12">
             <div class="row">
-                <div class="components-preview wide-xl mx-auto col-md-6">
-                    <div class="nk-block nk-block-lg">
-                        <div class="nk-block-head">
-                        </div>
-                        <div class="card card-bordered card-preview">
-                            <div class="card-inner">
-                                @can('admin-table')
-                                    <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal"
-                                        data-bs-target="#addPatientModal" data-modal-title="Tambah Pasien">
-                                        <span class="ni ni-plus"></span>
-                                        <span class="ms-1">Tambah pasien</span>
-                                    </button>
-                                @endcan
-                                <table class="datatable-init-export table-responsive table-bordered nowrap table"
-                                    data-export-title="Export">
-                                    <thead>
-                                        <tr class="table-white">
-                                            <th class="text-center" colspan="4">Meja 1</th>
-                                        </tr>
-                                        <tr class="table-white">
-                                                    <th class="text-center col-1">No</th>
-                                                    <th class="text-center col-6">Nama</th>
-                                                    <th class="text-center col-2">Usia</th>
-                                                    <th class="text-center no-export col-3">Aksi</th>
-                                                </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($patient1 as $index => $patient)
-                                            <tr>
-                                                <td class="text-center">{{ $index + 1 }}</td>
-                                                <td>{{ $patient->name }}</td>
-                                                <td class="text-center">{{ $patient->age }}</td>
-                                                <td class="text-center">
-                                                    <button class="btn btn-primary btn-xs rounded-pill btn-dim"
-                                                        data-bs-toggle="modal" data-bs-target="#showPatientModal"
-                                                        data-id="{{ $patient->id }}">
-                                                        <em class="icon ni ni-eye-fill"></em>
-                                                    </button>
-                                                    @can('admin-table')
-                                                        <button class="btn btn-warning btn-xs rounded-pill btn-dim"
-                                                            data-bs-toggle="modal" data-bs-target="#editPatientModal"
-                                                            data-modal-title="Edit Konseptor" data-id="{{ $patient->id }}">
-                                                            <em class="icon ni ni-edit-fill"></em>
-                                                        </button>
-                                                        <button class="btn btn-danger btn-xs rounded-pill btn-dim"
-                                                            data-bs-toggle="modal" data-bs-target="#deletePatientModal"
-                                                            data-id="{{ $patient->id }}">
-                                                            <em class="icon ni ni-trash-fill"></em>
-                                                        </button>
-                                                    @endcan
-                                                    @can('admin-monitoring-all')
-                                                        <button
-                                                            class="btn  {{ $patient->is_printed === 'true' ? 'btn-dark' : 'btn-danger' }} btn-xs rounded-pill btn-dim "
-                                                            data-bs-toggle="modal" data-bs-target="#printPatientModal"
-                                                            data-id="{{ $patient->id }}">
-                                                            <em class="icon ni ni-printer-fill"></em>
-                                                        </button>
-                                                    @endcan
-                                                </td>
+                <div class="col-md-4">
+                    <div class="components-preview wide-xl mx-auto mb-4">
+                        <div class="nk-block nk-block-lg">
+                            <div class="nk-block-head">
+                            </div>
+                            <div class="card card-bordered card-preview">
+                                <div class="card-inner">
+                                    @can('admin-table')
+                                        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal"
+                                            data-bs-target="#addPatientModal" data-modal-title="Tambah Pasien">
+                                            <span class="ni ni-plus"></span>
+                                            <span class="ms-1">Tambah pasien</span>
+                                        </button>
+                                    @endcan
+                                    <table
+                                        class="datatable-init-export nk-tb-list nk-tb-ulist table table-hover table-bordered table-responsive-md"
+                                        data-export-title="Export" data-auto-responsive="false">
+                                        <thead>
+                                            <tr class="table-light">
+                                                <th class="text-center" colspan="4">Meja 1</th>
                                             </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="components-preview wide-xl mx-auto col-md-6">
-                    <div class="nk-block nk-block-lg">
-                        <div class="nk-block-head">
-                        </div>
-                        <div class="card card-bordered card-preview">
-                            <div class="card-inner">
-                                @can('admin-table')
-                                    <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal"
-                                        data-bs-target="#addPatientModal" data-modal-title="Tambah Pasien">
-                                        <span class="ni ni-plus"></span>
-                                        <span class="ms-1">Tambah pasien</span>
-                                    </button>
-                                @endcan
-                                <table class="datatable-init-export table-responsive table-bordered nowrap table"
-                                    data-export-title="Export">
-                                    <thead>
-                                        <tr class="table-white">
-                                            <th class="text-center" colspan="4">Meja 2</th>
-                                        </tr>
-                                        <tr class="table-white">
-                                                    <th class="text-center col-1">No</th>
-                                                    <th class="text-center col-6">Nama</th>
-                                                    <th class="text-center col-2">Usia</th>
-                                                    <th class="text-center no-export col-3">Aksi</th>
-                                                </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($patient2 as $index => $patient)
-                                            <tr>
-                                                <td class="text-center">{{ $index + 1 }}</td>
-                                                <td>{{ $patient->name }}</td>
-                                                <td class="text-center">{{ $patient->age }}</td>
-                                                <td class="text-center">
-                                                    <button class="btn btn-primary btn-xs rounded-pill btn-dim"
-                                                        data-bs-toggle="modal" data-bs-target="#showPatientModal"
-                                                        data-id="{{ $patient->id }}">
-                                                        <em class="icon ni ni-eye-fill"></em>
-                                                    </button>
-                                                    @can('admin-table')
-                                                        <button class="btn btn-warning btn-xs rounded-pill btn-dim"
-                                                            data-bs-toggle="modal" data-bs-target="#editPatientModal"
-                                                            data-modal-title="Edit Konseptor" data-id="{{ $patient->id }}">
-                                                            <em class="icon ni ni-edit-fill"></em>
-                                                        </button>
-                                                        <button class="btn btn-danger btn-xs rounded-pill btn-dim"
-                                                            data-bs-toggle="modal" data-bs-target="#deletePatientModal"
-                                                            data-id="{{ $patient->id }}">
-                                                            <em class="icon ni ni-trash-fill"></em>
-                                                        </button>
-                                                    @endcan
-                                                    @can('admin-monitoring-all')
-                                                        <button
-                                                            class="btn  {{ $patient->is_printed === 'true' ? 'btn-dark' : 'btn-danger' }} btn-xs rounded-pill btn-dim "
-                                                            data-bs-toggle="modal" data-bs-target="#printPatientModal"
-                                                            data-id="{{ $patient->id }}">
-                                                            <em class="icon ni ni-printer-fill"></em>
-                                                        </button>
-                                                    @endcan
-                                                </td>
+                                            <tr class="table-white">
+                                                <th class="text-center col-1">No</th>
+                                                <th class="text-center col-1">Nama</th>
+                                                <th class="text-center col-1">Usia</th>
+                                                <th class="text-center no-export col-1">Aksi</th>
                                             </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($patient1 as $index => $patient)
+                                                <tr>
+                                                    <td class="text-center">{{ $index + 1 }}</td>
+                                                    <td>{{ $patient->name }}</td>
+                                                    <td class="text-center">{{ $patient->age }}</td>
+                                                    <td class="text-center">
+                                                        <button class="btn btn-primary btn-xs rounded-pill btn-dim"
+                                                            data-bs-toggle="modal" data-bs-target="#showPatientModal"
+                                                            data-id="{{ $patient->id }}">
+                                                            <em class="icon ni ni-eye-fill"></em>
+                                                        </button>
+                                                        @can('admin-table')
+                                                            <button class="btn btn-warning btn-xs rounded-pill btn-dim"
+                                                                data-bs-toggle="modal" data-bs-target="#editPatientModal"
+                                                                data-modal-title="Edit Konseptor" data-id="{{ $patient->id }}">
+                                                                <em class="icon ni ni-edit-fill"></em>
+                                                            </button>
+                                                            <button class="btn btn-danger btn-xs rounded-pill btn-dim"
+                                                                data-bs-toggle="modal" data-bs-target="#deletePatientModal"
+                                                                data-id="{{ $patient->id }}">
+                                                                <em class="icon ni ni-trash-fill"></em>
+                                                            </button>
+                                                        @endcan
+                                                        @can('admin-monitoring-all')
+                                                            <button
+                                                                onclick="printAndPreview({{ $patient->id }})"class="btn {{ $patient->is_printed ? 'btn-dark' : 'btn-danger' }} btn-primary btn-xs rounded-pill btn-dim"><em
+                                                                    class="icon ni ni-printer-fill"></em></button>
+                                                        @endcan
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    @endcan
-
-    <div class="components-preview wide-xl mx-auto">
-        <div class="nk-block nk-block-lg">
-            <div class="nk-block-head">
-            </div>
-            <div class="card card-bordered card-preview">
-                <div class="card-inner">
-                    @can('admin-table')
-                        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal"
-                            data-bs-target="#addPatientModal" data-modal-title="Tambah Pasien">
-                            <span class="ni ni-plus"></span>
-                            <span class="ms-1">Tambah pasien</span>
-                        </button>
-                    @endcan
-                    <table class="datatable-init-export table-responsive table-bordered nowrap table"
-                        data-export-title="Export">
-                        @if (auth()->user()->role === 'Admin Monitoring All')
-                            <thead>
-                                <tr class="table-white">
-                                    <th class="text-center" colspan="4">Meja 3</th>
-                                </tr>
-                                <tr class="table-white">
-                                                    <th class="text-center col-1">No</th>
-                                                    <th class="text-center col-6">Nama</th>
-                                                    <th class="text-center col-2">Usia</th>
-                                                    <th class="text-center no-export col-3">Aksi</th>
+                <div class="col-md-4">
+                    <div class="components-preview wide-xl mx-auto mb-4">
+                        <div class="nk-block nk-block-lg">
+                            <div class="nk-block-head">
+                            </div>
+                            <div class="card card-bordered card-preview">
+                                <div class="card-inner">
+                                    @can('admin-table')
+                                        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal"
+                                            data-bs-target="#addPatientModal" data-modal-title="Tambah Pasien">
+                                            <span class="ni ni-plus"></span>
+                                            <span class="ms-1">Tambah pasien</span>
+                                        </button>
+                                    @endcan
+                                    <table
+                                        class="datatable-init-export nk-tb-list nk-tb-ulist table table-hover table-bordered table-responsive-md"
+                                        data-export-title="Export" data-auto-responsive="false">
+                                        <thead>
+                                            <tr class="table-light">
+                                                <th class="text-center" colspan="4">Meja 2</th>
+                                            </tr>
+                                            <tr class="table-white">
+                                                <th class="text-center col-1">No</th>
+                                                <th class="text-center col-1">Nama</th>
+                                                <th class="text-center col-1">Usia</th>
+                                                <th class="text-center no-export col-1">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($patient2 as $index => $patient)
+                                                <tr>
+                                                    <td class="text-center">{{ $index + 1 }}</td>
+                                                    <td>{{ $patient->name }}</td>
+                                                    <td class="text-center">{{ $patient->age }}</td>
+                                                    <td class="text-center">
+                                                        <button class="btn btn-primary btn-xs rounded-pill btn-dim"
+                                                            data-bs-toggle="modal" data-bs-target="#showPatientModal"
+                                                            data-id="{{ $patient->id }}">
+                                                            <em class="icon ni ni-eye-fill"></em>
+                                                        </button>
+                                                        @can('admin-table')
+                                                            <button class="btn btn-warning btn-xs rounded-pill btn-dim"
+                                                                data-bs-toggle="modal" data-bs-target="#editPatientModal"
+                                                                data-modal-title="Edit Konseptor" data-id="{{ $patient->id }}">
+                                                                <em class="icon ni ni-edit-fill"></em>
+                                                            </button>
+                                                            <button class="btn btn-danger btn-xs rounded-pill btn-dim"
+                                                                data-bs-toggle="modal" data-bs-target="#deletePatientModal"
+                                                                data-id="{{ $patient->id }}">
+                                                                <em class="icon ni ni-trash-fill"></em>
+                                                            </button>
+                                                        @endcan
+                                                        @can('admin-monitoring-all')
+                                                            <button
+                                                                onclick="printAndPreview({{ $patient->id }})"class="btn {{ $patient->is_printed ? 'btn-dark' : 'btn-danger' }} btn-primary btn-xs rounded-pill btn-dim"><em
+                                                                    class="icon ni ni-printer-fill"></em></button>
+                                                        @endcan
+                                                    </td>
                                                 </tr>
-                            </thead>
-                        @else
-                            <thead>
-                                <tr class="table-white">
-                                                    <th class="text-center col-1">No</th>
-                                                    <th class="text-center col-6">Nama</th>
-                                                    <th class="text-center col-2">Usia</th>
-                                                    <th class="text-center no-export col-3">Aksi</th>
-                                                </tr>
-                            </thead>
-                        @endif
-                        <tbody>
-                            @if (auth()->user()->role === 'Admin Monitoring All')
-                                @foreach ($patient3 as $index => $patient)
-                                    <tr>
-                                        <td class="text-center">{{ $index + 1 }}</td>
-                                        <td>{{ $patient->name }}</td>
-                                        <td class="text-center">{{ $patient->age }}</td>
-                                        <td class="text-center">
-                                            <button class="btn btn-primary btn-xs rounded-pill btn-dim"
-                                                data-bs-toggle="modal" data-bs-target="#showPatientModal"
-                                                data-id="{{ $patient->id }}">
-                                                <em class="icon ni ni-eye-fill"></em>
-                                            </button>
-                                            @can('admin-table')
-                                                <button class="btn btn-warning btn-xs rounded-pill btn-dim"
-                                                    data-bs-toggle="modal" data-bs-target="#editPatientModal"
-                                                    data-modal-title="Edit Konseptor" data-id="{{ $patient->id }}">
-                                                    <em class="icon ni ni-edit-fill"></em>
-                                                </button>
-                                                <button class="btn btn-danger btn-xs rounded-pill btn-dim"
-                                                    data-bs-toggle="modal" data-bs-target="#deletePatientModal"
-                                                    data-id="{{ $patient->id }}">
-                                                    <em class="icon ni ni-trash-fill"></em>
-                                                </button>
-                                            @endcan
-                                            @can('admin-monitoring-all')
-                                                <button
-                                                    class="btn  {{ $patient->is_printed === 'true' ? 'btn-dark' : 'btn-danger' }} btn-xs rounded-pill btn-dim "
-                                                    data-bs-toggle="modal" data-bs-target="#printPatientModal"
-                                                    data-id="{{ $patient->id }}">
-                                                    <em class="icon ni ni-printer-fill"></em>
-                                                </button>
-                                            @endcan
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            @else
-                                @foreach ($patients as $index => $patient)
-                                    <tr>
-                                        <td class="text-center">{{ $index + 1 }}</td>
-                                        <td>{{ $patient->name }}</td>
-                                        <td class="text-center">{{ $patient->age }}</td>
-                                        @can('admin-monitoring-all')
-                                            <td>{{ $patient->table_number }}</td>
-                                        @endcan
-                                        <td class="text-center">
-                                            <button class="btn btn-primary btn-xs rounded-pill btn-dim"
-                                                data-bs-toggle="modal" data-bs-target="#showPatientModal"
-                                                data-id="{{ $patient->id }}">
-                                                <em class="icon ni ni-eye-fill"></em>
-                                            </button>
-                                            @can('admin-table')
-                                                <button class="btn btn-warning btn-xs rounded-pill btn-dim"
-                                                    data-bs-toggle="modal" data-bs-target="#editPatientModal"
-                                                    data-modal-title="Edit Konseptor" data-id="{{ $patient->id }}">
-                                                    <em class="icon ni ni-edit-fill"></em>
-                                                </button>
-                                                <button class="btn btn-danger btn-xs rounded-pill btn-dim"
-                                                    data-bs-toggle="modal" data-bs-target="#deletePatientModal"
-                                                    data-id="{{ $patient->id }}">
-                                                    <em class="icon ni ni-trash-fill"></em>
-                                                </button>
-                                            @endcan
-                                            @can('admin-monitoring-all')
-                                                <button
-                                                    class="btn  {{ $patient->is_printed ? 'btn-dark' : 'btn-danger' }} btn-xs rounded-pill btn-dim "
-                                                    data-bs-toggle="modal" data-bs-target="#printPatientModal"
-                                                    data-id="{{ $patient->id }}">
-                                                    <em class="icon ni ni-printer-fill"></em>
-                                                </button>
-                                            @endcan
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            @endif
-                        </tbody>
-                    </table>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    @can('admin-monitoring-all')
-        <div class="card card-bordered card-preview">
-            <div class="card-inner">
-                <ul class="nav nav-tabs mt-n3">
-                    <li class="nav-item">
-                        <a class="nav-link active" data-bs-toggle="tab" href="#tabItem1">Meja 1</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="tab" href="#tabItem2">Meja 2</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="tab" href="#tabItem3">Meja 3</a>
-                    </li>
-                </ul>
-                <div class="tab-content">
-                    <div class="tab-pane active" id="tabItem1">
-                        <div class="components-preview wide-xl mx-auto">
-                            <div class="nk-block nk-block-lg">
-                                <div class="nk-block-head">
-                                </div>
-                                <div class="card card-bordered card-preview">
-                                    <div class="card-inner">
-                                        @can('admin-table')
-                                            <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal"
-                                                data-bs-target="#addPatientModal" data-modal-title="Tambah Pasien">
-                                                <span class="ni ni-plus"></span>
-                                                <span class="ms-1">Tambah pasien</span>
-                                            </button>
-                                        @endcan
-                                        <table class="datatable-init-export table-responsive table-bordered nowrap table"
-                                            data-export-title="Export">
-                                            <thead>
-                                                <tr class="table-white">
-                                                    <th class="text-center" colspan="4">Meja 1</th>
-                                                </tr>
-                                                <tr class="table-white">
-                                                    <th class="text-center col-1">No</th>
-                                                    <th class="text-center col-6">Nama</th>
-                                                    <th class="text-center col-2">Usia</th>
-                                                    <th class="text-center no-export col-3">Aksi</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($patient1 as $index => $patient)
-                                                    <tr>
-                                                        <td class="text-center">{{ $index + 1 }}</td>
-                                                        <td>{{ $patient->name }}</td>
-                                                        <td class="text-center">{{ $patient->age }}</td>
-                                                        <td class="text-center">
-                                                            <button class="btn btn-primary btn-xs rounded-pill btn-dim"
-                                                                data-bs-toggle="modal" data-bs-target="#showPatientModal"
-                                                                data-id="{{ $patient->id }}">
-                                                                <em class="icon ni ni-eye-fill"></em>
-                                                            </button>
-                                                            @can('admin-table')
-                                                                <button class="btn btn-warning btn-xs rounded-pill btn-dim"
-                                                                    data-bs-toggle="modal" data-bs-target="#editPatientModal"
-                                                                    data-modal-title="Edit Konseptor"
-                                                                    data-id="{{ $patient->id }}">
-                                                                    <em class="icon ni ni-edit-fill"></em>
-                                                                </button>
-                                                                <button class="btn btn-danger btn-xs rounded-pill btn-dim"
-                                                                    data-bs-toggle="modal" data-bs-target="#deletePatientModal"
-                                                                    data-id="{{ $patient->id }}">
-                                                                    <em class="icon ni ni-trash-fill"></em>
-                                                                </button>
-                                                            @endcan
-                                                            @can('admin-monitoring-all')
-                                                                <button
-                                                                    class="btn  {{ $patient->is_printed === 'true' ? 'btn-dark' : 'btn-danger' }} btn-xs rounded-pill btn-dim "
-                                                                    data-bs-toggle="modal" data-bs-target="#printPatientModal"
-                                                                    data-id="{{ $patient->id }}">
-                                                                    <em class="icon ni ni-printer-fill"></em>
-                                                                </button>
-                                                            @endcan
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
+                <div class="col-md-4">
+                    <div class="components-preview wide-xl mx-auto mb-4">
+                        <div class="nk-block nk-block-lg">
+                            <div class="nk-block-head">
                             </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane" id="tabItem2">
-                        <div class="components-preview wide-xl mx-auto">
-                            <div class="nk-block nk-block-lg">
-                                <div class="nk-block-head">
-                                </div>
-                                <div class="card card-bordered card-preview">
-                                    <div class="card-inner">
-                                        @can('admin-table')
-                                            <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal"
-                                                data-bs-target="#addPatientModal" data-modal-title="Tambah Pasien">
-                                                <span class="ni ni-plus"></span>
-                                                <span class="ms-1">Tambah pasien</span>
-                                            </button>
-                                        @endcan
-                                        <table class="datatable-init-export table-responsive table-bordered nowrap table"
-                                            data-export-title="Export">
-                                            <thead>
-                                                <tr class="table-white">
-                                                    <th class="text-center" colspan="4">Meja 2</th>
-                                                </tr>
-                                                <tr class="table-white">
-                                                    <th class="text-center col-1">No</th>
-                                                    <th class="text-center col-6">Nama</th>
-                                                    <th class="text-center col-2">Usia</th>
-                                                    <th class="text-center no-export col-3">Aksi</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($patient2 as $index => $patient)
-                                                    <tr>
-                                                        <td class="text-center">{{ $index + 1 }}</td>
-                                                        <td>{{ $patient->name }}</td>
-                                                        <td class="text-center">{{ $patient->age }}</td>
-                                                        <td class="text-center">
-                                                            <button class="btn btn-primary btn-xs rounded-pill btn-dim"
-                                                                data-bs-toggle="modal" data-bs-target="#showPatientModal"
-                                                                data-id="{{ $patient->id }}">
-                                                                <em class="icon ni ni-eye-fill"></em>
+                            <div class="card card-bordered card-preview">
+                                <div class="card-inner">
+                                    @can('admin-table')
+                                        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal"
+                                            data-bs-target="#addPatientModal" data-modal-title="Tambah Pasien">
+                                            <span class="ni ni-plus"></span>
+                                            <span class="ms-1">Tambah pasien</span>
+                                        </button>
+                                    @endcan
+                                    <table
+                                        class="datatable-init-export nk-tb-list nk-tb-ulist table table-hover table-bordered table-responsive-md"
+                                        data-export-title="Export" data-auto-responsive="false">
+                                        <thead>
+                                            <tr class="table-light">
+                                                <th class="text-center" colspan="4">Meja 3</th>
+                                            </tr>
+                                            <tr class="table-white">
+                                                <th class="text-center col-1">No</th>
+                                                <th class="text-center col-1">Nama</th>
+                                                <th class="text-center col-1">Usia</th>
+                                                <th class="text-center no-export col-1">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($patient3 as $index => $patient)
+                                                <tr>
+                                                    <td class="text-center">{{ $index + 1 }}</td>
+                                                    <td>{{ $patient->name }}</td>
+                                                    <td class="text-center">{{ $patient->age }}</td>
+                                                    <td class="text-center nowrap">
+                                                        <button class="btn btn-primary btn-xs rounded-pill btn-dim"
+                                                            data-bs-toggle="modal" data-bs-target="#showPatientModal"
+                                                            data-id="{{ $patient->id }}">
+                                                            <em class="icon ni ni-eye-fill"></em>
+                                                        </button>
+                                                        @can('admin-table')
+                                                            <button class="btn btn-warning btn-xs rounded-pill btn-dim"
+                                                                data-bs-toggle="modal" data-bs-target="#editPatientModal"
+                                                                data-modal-title="Edit Konseptor" data-id="{{ $patient->id }}">
+                                                                <em class="icon ni ni-edit-fill"></em>
                                                             </button>
-                                                            @can('admin-table')
-                                                                <button class="btn btn-warning btn-xs rounded-pill btn-dim"
-                                                                    data-bs-toggle="modal" data-bs-target="#editPatientModal"
-                                                                    data-modal-title="Edit Konseptor"
-                                                                    data-id="{{ $patient->id }}">
-                                                                    <em class="icon ni ni-edit-fill"></em>
-                                                                </button>
-                                                                <button class="btn btn-danger btn-xs rounded-pill btn-dim"
-                                                                    data-bs-toggle="modal" data-bs-target="#deletePatientModal"
-                                                                    data-id="{{ $patient->id }}">
-                                                                    <em class="icon ni ni-trash-fill"></em>
-                                                                </button>
-                                                            @endcan
-                                                            @can('admin-monitoring-all')
-                                                                <button
-                                                                    class="btn  {{ $patient->is_printed === 'true' ? 'btn-dark' : 'btn-danger' }} btn-xs rounded-pill btn-dim "
-                                                                    data-bs-toggle="modal" data-bs-target="#printPatientModal"
-                                                                    data-id="{{ $patient->id }}">
-                                                                    <em class="icon ni ni-printer-fill"></em>
-                                                                </button>
-                                                            @endcan
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane" id="tabItem3">
-                        <div class="components-preview wide-xl mx-auto">
-                            <div class="nk-block nk-block-lg">
-                                <div class="nk-block-head">
-                                </div>
-                                <div class="card card-bordered card-preview">
-                                    <div class="card-inner">
-                                        @can('admin-table')
-                                            <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal"
-                                                data-bs-target="#addPatientModal" data-modal-title="Tambah Pasien">
-                                                <span class="ni ni-plus"></span>
-                                                <span class="ms-1">Tambah pasien</span>
-                                            </button>
-                                        @endcan
-                                        <table class="datatable-init-export table-responsive table-bordered nowrap table"
-                                            data-export-title="Export">
-                                            <thead>
-                                                <tr class="table-white">
-                                                    <th class="text-center" colspan="4">Meja 3</th>
-                                                </tr>
-                                                <tr class="table-white">
-                                                    <th class="text-center col-1">No</th>
-                                                    <th class="text-center col-6">Nama</th>
-                                                    <th class="text-center col-2">Usia</th>
-                                                    <th class="text-center no-export col-3">Aksi</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($patient3 as $index => $patient)
-                                                    <tr>
-                                                        <td class="text-center">{{ $index + 1 }}</td>
-                                                        <td>{{ $patient->name }}</td>
-                                                        <td class="text-center">{{ $patient->age }}</td>
-                                                        <td class="text-center">
-                                                            <button class="btn btn-primary btn-xs rounded-pill btn-dim"
-                                                                data-bs-toggle="modal" data-bs-target="#showPatientModal"
+                                                            <button class="btn btn-danger btn-xs rounded-pill btn-dim"
+                                                                data-bs-toggle="modal" data-bs-target="#deletePatientModal"
                                                                 data-id="{{ $patient->id }}">
-                                                                <em class="icon ni ni-eye-fill"></em>
+                                                                <em class="icon ni ni-trash-fill"></em>
                                                             </button>
-                                                            @can('admin-table')
-                                                                <button class="btn btn-warning btn-xs rounded-pill btn-dim"
-                                                                    data-bs-toggle="modal" data-bs-target="#editPatientModal"
-                                                                    data-modal-title="Edit Konseptor"
-                                                                    data-id="{{ $patient->id }}">
-                                                                    <em class="icon ni ni-edit-fill"></em>
-                                                                </button>
-                                                                <button class="btn btn-danger btn-xs rounded-pill btn-dim"
-                                                                    data-bs-toggle="modal" data-bs-target="#deletePatientModal"
-                                                                    data-id="{{ $patient->id }}">
-                                                                    <em class="icon ni ni-trash-fill"></em>
-                                                                </button>
-                                                            @endcan
-                                                            @can('admin-monitoring-all')
-                                                                <button
-                                                                    class="btn  {{ $patient->is_printed === 'true' ? 'btn-dark' : 'btn-danger' }} btn-xs rounded-pill btn-dim "
-                                                                    data-bs-toggle="modal" data-bs-target="#printPatientModal"
-                                                                    data-id="{{ $patient->id }}">
-                                                                    <em class="icon ni ni-printer-fill"></em>
-                                                                </button>
-                                                            @endcan
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                                        @endcan
+                                                        @can('admin-monitoring-all')
+                                                            <button
+                                                                onclick="printAndPreview({{ $patient->id }})"class="btn {{ $patient->is_printed ? 'btn-dark' : 'btn-danger' }} btn-primary btn-xs rounded-pill btn-dim"><em
+                                                                    class="icon ni ni-printer-fill"></em></button>
+                                                        @endcan
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -610,6 +355,15 @@
         </div>
     @endcan
 
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     @can('admin-table')
         <div class="components-preview wide-xl mx-auto">
             <div class="nk-block nk-block-lg">
@@ -624,10 +378,11 @@
                                 <span class="ms-1">Tambah pasien</span>
                             </button>
                         @endcan
-                        <table class="datatable-init-export table-responsive table-bordered nowrap table"
-                            data-export-title="Export">
+                        <table
+                            class="datatable-init-export nk-tb-list nk-tb-ulist table table-hover table-bordered table-responsive-md"
+                            data-export-title="Export" data-auto-responsive="false">
                             <thead>
-                                <tr class="table-white">
+                                <tr class="table-light">
                                     <th class="text-center col-1">No</th>
                                     <th class="text-center col-6">Nama</th>
                                     <th class="text-center col-2">Usia</th>
@@ -640,7 +395,7 @@
                                         <td class="text-center">{{ $index + 1 }}</td>
                                         <td>{{ $patient->name }}</td>
                                         <td class="text-center">{{ $patient->age }}</td>
-                                        <td class="text-center">
+                                        <td class="text-center text-nowrap">
                                             <button class="btn btn-primary btn-xs rounded-pill btn-dim" data-bs-toggle="modal"
                                                 data-bs-target="#showPatientModal" data-id="{{ $patient->id }}">
                                                 <em class="icon ni ni-eye-fill"></em>
@@ -658,7 +413,7 @@
                                             @endcan
                                             @can('admin-monitoring-all')
                                                 <button
-                                                    class="btn  {{ $patient->is_printed === 'true' ? 'btn-dark' : 'btn-danger' }} btn-xs rounded-pill btn-dim "
+                                                    class="btn  {{ $patient->is_printed ? 'btn-dark' : 'btn-danger' }} btn-xs rounded-pill btn-dim "
                                                     data-bs-toggle="modal" data-bs-target="#printPatientModal"
                                                     data-id="{{ $patient->id }}">
                                                     <em class="icon ni ni-printer-fill"></em>
@@ -675,8 +430,6 @@
         </div>
     @endcan
 
-
-
     {{-- Add Modal --}}
     <div class="modal fade" id="addPatientModal">
         <div class="modal-dialog modal-lg modal-dialog-top" role="document">
@@ -692,9 +445,9 @@
                         @csrf
                         <h5 class="mb-3">Identitas</h5>
                         <div class="form-group row">
-                            <label for="add_name" class="col-md-4 col-form-label">Nama Pasien
+                            <label for="add_name" class="col-md-3 col-form-label">Nama Pasien
                                 :</label>
-                            <div class="col-md-8">
+                            <div class="col-md-9">
                                 <div class="form-control-wrap">
                                     <input type="text" class="form-control" id="add_name" name="name"
                                         placeholder="Masukkan nama pasien" required>
@@ -702,9 +455,9 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="add_age" class="col-md-4 col-form-label">Umur Pasien
+                            <label for="add_age" class="col-md-3 col-form-label">Umur Pasien
                                 :</label>
-                            <div class="col-md-8">
+                            <div class="col-md-9">
                                 <div class="form-control-wrap">
                                     <input type="number" class="form-control" id="add_age" name="age"
                                         placeholder="Masukkan umur pasien" required>
@@ -713,11 +466,11 @@
                         </div>
 
                         <div class="form-group row gy-4">
-                            <label class="col-md-4 col-form-label">Jenis Kelamin :</label>
+                            <label class="col-md-3 col-form-label">Jenis Kelamin :</label>
                             <div class="col-md-4 col-sm-6">
                                 <div class="preview-block">
                                     <div class="custom-control custom-control-sm custom-radio">
-                                        <input type="radio" id="customRadio1" name="gender" value="Laki-laki"
+                                        <input type="radio" id="customRadio1" name="gender" value="Laki-laki" required
                                             class="custom-control-input">
                                         <label class="custom-control-label" for="customRadio1">Laki-laki</label>
                                     </div>
@@ -726,7 +479,7 @@
                             <div class="col-md-4 col-sm-6">
                                 <div class="preview-block">
                                     <div class="custom-control custom-control-sm custom-radio">
-                                        <input type="radio" id="customRadio2" name="gender" value="Perempuan"
+                                        <input type="radio" id="customRadio2" name="gender" value="Perempuan" required
                                             class="custom-control-input">
                                         <label class="custom-control-label" for="customRadio2">Perempuan</label>
                                     </div>
@@ -735,9 +488,9 @@
                         </div>
 
                         <div class="form-group row mt-3">
-                            <label for="add_address" class="col-md-4 col-form-label">Alamat Pasien
+                            <label for="add_address" class="col-md-3 col-form-label">Alamat Pasien
                                 :</label>
-                            <div class="col-md-8">
+                            <div class="col-md-9">
                                 <div class="form-control-wrap">
                                     <textarea type="text" class="form-control" id="add_address" name="address" placeholder="Masukkan alamat pasien"
                                         required></textarea>
@@ -746,40 +499,86 @@
                         </div>
                         <h5 class="my-3">Hasil Pemeriksaan</h5>
                         <div class="form-group row">
-                            <label for="add_blood_pressure" class="col-md-4 col-form-label">Tekanan darah :</label>
-                            <div class="col-md-8">
-                                <div class="form-control-wrap">
-                                    <input type="text" class="form-control" id="add_blood_pressure"
-                                        name="blood_pressure" placeholder="Masukkan tekanan darah pasien" required>
+                            <label for="systolic_blood_pressure" class="col-md-3 col-form-label">Tekanan darah :</label>
+                            <div class="col-md-9">
+                                <div class="input-group">
+                                    <input type="number" class="form-control" name="systolic_blood_pressure"
+                                        id="systolic_blood_pressure" placeholder="Sistolik">
+                                    <div class="input-group-prepend input-group-append">
+                                        <span class="input-group-text">/</span>
+                                    </div>
+                                    <input type="number" class="form-control" name="diastolic_blood_pressure"
+                                        id="diastolic_blood_pressure" placeholder="Diastolik">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">mmHg</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
+                        <div class="form-group row gy-4">
+                            <label class="col-md-3 col-form-label">Jenis gula darah :</label>
+                            <div class="col-md-4 col-sm-6">
+                                <div class="preview-block">
+                                    <div class="custom-control custom-control-sm custom-radio">
+                                        <input type="radio" id="blood_glucose_type1" name="blood_glucose_type" required
+                                            value="GDS" class="custom-control-input">
+                                        <label class="custom-control-label" for="blood_glucose_type1">GDS</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-6">
+                                <div class="preview-block">
+                                    <div class="custom-control custom-control-sm custom-radio">
+                                        <input type="radio" id="blood_glucose_type2" name="blood_glucose_type" required
+                                            value="GDP" class="custom-control-input">
+                                        <label class="custom-control-label" for="blood_glucose_type2">GDP</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="form-group row">
-                            <label for="add_blood_glucose" class="col-md-4 col-form-label">Gula
+                            <label for="add_blood_glucose" class="col-md-3 col-form-label">Gula
                                 darah :</label>
-                            <div class="col-md-8">
+                            <div class="col-md-9">
                                 <div class="form-control-wrap">
-                                    <input type="text" class="form-control" id="add_blood_glucose"
-                                        name="blood_glucose" placeholder="Masukkan gula darah pasien" required>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="add_blood_glucose"
+                                            name="blood_glucose" placeholder="Masukkan gula darah pasien">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">mg/dL</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="add_uric_acid" class="col-md-4 col-form-label">Asam urat
+                            <label for="add_uric_acid" class="col-md-3 col-form-label">Asam urat
                                 :</label>
-                            <div class="col-md-8">
+                            <div class="col-md-9">
                                 <div class="form-control-wrap">
-                                    <input type="text" class="form-control" id="add_uric_acid" name="uric_acid"
-                                        placeholder="Masukkan asam urat pasien" required>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="add_uric_acid" name="uric_acid"
+                                            placeholder="Masukkan asam urat pasien">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">mg/dL</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="add_cholesterol" class="col-md-4 col-form-label">Kolesterol :</label>
-                            <div class="col-md-8">
+                            <label for="add_cholesterol" class="col-md-3 col-form-label">Kolesterol :</label>
+                            <div class="col-md-9">
                                 <div class="form-control-wrap">
-                                    <input type="text" class="form-control" id="add_cholesterol" name="cholesterol"
-                                        placeholder="Masukkan kolesterol pasien" required>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="add_cholesterol"
+                                            name="cholesterol" placeholder="Masukkan kolesterol pasien">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">mg/dL</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -807,9 +606,9 @@
                     <form action="" method="POST" class="form-validate is-alter" id="editForm">
                         @csrf
                         <div class="form-group row">
-                            <label for="name" class="col-md-4 col-form-label">Nama Pasien
+                            <label for="name" class="col-md-3 col-form-label">Nama Pasien
                                 :</label>
-                            <div class="col-md-8">
+                            <div class="col-md-9">
                                 <div class="form-control-wrap">
                                     <input type="text" class="form-control" id="name" name="name"
                                         placeholder="Masukkan nama pasien" required>
@@ -817,9 +616,9 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="age" class="col-md-4 col-form-label">Umur Pasien
+                            <label for="age" class="col-md-3 col-form-label">Umur Pasien
                                 :</label>
-                            <div class="col-md-8">
+                            <div class="col-md-9">
                                 <div class="form-control-wrap">
                                     <input type="number" class="form-control" id="age" name="age"
                                         placeholder="Masukkan umur pasien" required>
@@ -828,11 +627,11 @@
                         </div>
 
                         <div class="form-group row gy-4">
-                            <label class="col-md-4 col-form-label">Jenis Kelamin :</label>
+                            <label class="col-md-3 col-form-label">Jenis Kelamin :</label>
                             <div class="col-md-4 col-sm-6">
                                 <div class="preview-block">
                                     <div class="custom-control custom-control-sm custom-radio">
-                                        <input type="radio" id="editCustomRadio1" name="gender" value="Laki-laki"
+                                        <input type="radio" id="editCustomRadio1" name="gender" value="Laki-laki" required
                                             class="custom-control-input">
                                         <label class="custom-control-label" for="editCustomRadio1">Laki-laki</label>
                                     </div>
@@ -841,7 +640,7 @@
                             <div class="col-md-4 col-sm-6">
                                 <div class="preview-block">
                                     <div class="custom-control custom-control-sm custom-radio">
-                                        <input type="radio" id="editCustomRadio2" name="gender" value="Perempuan"
+                                        <input type="radio" id="editCustomRadio2" name="gender" value="Perempuan" required
                                             class="custom-control-input">
                                         <label class="custom-control-label" for="editCustomRadio2">Perempuan</label>
                                     </div>
@@ -849,9 +648,9 @@
                             </div>
                         </div>
                         <div class="form-group row mt-3">
-                            <label for="add_address" class="col-md-4 col-form-label">Alamat Pasien
+                            <label for="add_address" class="col-md-3 col-form-label">Alamat Pasien
                                 :</label>
-                            <div class="col-md-8">
+                            <div class="col-md-9">
                                 <div class="form-control-wrap">
                                     <textarea type="text" class="form-control" id="add_address" name="address" placeholder="Masukkan alamat pasien"
                                         required></textarea>
@@ -860,40 +659,87 @@
                         </div>
                         <h5 class="my-3">Hasil Pemeriksaan</h5>
                         <div class="form-group row">
-                            <label for="add_blood_pressure" class="col-md-4 col-form-label">Tekanan darah :</label>
-                            <div class="col-md-8">
-                                <div class="form-control-wrap">
-                                    <input type="text" class="form-control" id="add_blood_pressure"
-                                        name="blood_pressure" placeholder="Masukkan tekanan darah pasien" required>
+                            <label for="systolic_blood_pressure" class="col-md-3 col-form-label">Tekanan darah :</label>
+                            <div class="col-md-9">
+                                <div class="input-group">
+                                    <input type="text" class="form-control remove-dash" name="systolic_blood_pressure"
+                                        id="systolic_blood_pressure" placeholder="Sistolik">
+                                    <div class="input-group-prepend input-group-append">
+                                        <span class="input-group-text">/</span>
+                                    </div>
+                                    <input type="text" class="form-control remove-dash"
+                                        name="diastolic_blood_pressure" id="diastolic_blood_pressure"
+                                        placeholder="Diastolik">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">mmHg</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
+                        <div class="form-group row gy-4">
+                            <label class="col-md-3 col-form-label">Jenis gula darah :</label>
+                            <div class="col-md-4 col-sm-6">
+                                <div class="preview-block">
+                                    <div class="custom-control custom-control-sm custom-radio">
+                                        <input type="radio" id="blood_glucose_type1" name="blood_glucose_type" required
+                                            value="GDS" class="custom-control-input">
+                                        <label class="custom-control-label" for="blood_glucose_type1">GDS</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-6">
+                                <div class="preview-block">
+                                    <div class="custom-control custom-control-sm custom-radio">
+                                        <input type="radio" id="blood_glucose_type2" name="blood_glucose_type" required
+                                            value="GDP" class="custom-control-input">
+                                        <label class="custom-control-label" for="blood_glucose_type2">GDP</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="form-group row">
-                            <label for="add_blood_glucose" class="col-md-4 col-form-label">Gula
+                            <label for="add_blood_glucose" class="col-md-3 col-form-label">Gula
                                 darah :</label>
-                            <div class="col-md-8">
+                            <div class="col-md-9">
                                 <div class="form-control-wrap">
-                                    <input type="text" class="form-control" id="add_blood_glucose"
-                                        name="blood_glucose" placeholder="Masukkan gula darah pasien" required>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control remove-dash" id="add_blood_glucose"
+                                            name="blood_glucose" placeholder="Masukkan gula darah pasien">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">mg/dL</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="add_uric_acid" class="col-md-4 col-form-label">Asam urat
+                            <label for="add_uric_acid" class="col-md-3 col-form-label">Asam urat
                                 :</label>
-                            <div class="col-md-8">
+                            <div class="col-md-9">
                                 <div class="form-control-wrap">
-                                    <input type="text" class="form-control" id="add_uric_acid" name="uric_acid"
-                                        placeholder="Masukkan asam urat pasien" required>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control remove-dash" id="add_uric_acid"
+                                            name="uric_acid" placeholder="Masukkan asam urat pasien">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">mg/dL</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="add_cholesterol" class="col-md-4 col-form-label">Kolesterol :</label>
-                            <div class="col-md-8">
+                            <label for="add_cholesterol" class="col-md-3 col-form-label">Kolesterol :</label>
+                            <div class="col-md-9">
                                 <div class="form-control-wrap">
-                                    <input type="text" class="form-control" id="add_cholesterol" name="cholesterol"
-                                        placeholder="Masukkan kolesterol pasien" required>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control remove-dash" id="add_cholesterol"
+                                            name="cholesterol" placeholder="Masukkan kolesterol pasien">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">mg/dL</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -921,9 +767,9 @@
                     <form action="" method="POST" class="form-validate is-alter" id="editForm">
                         @csrf
                         <div class="form-group row">
-                            <label for="name" class="col-md-4 col-form-label">Nama Pasien
+                            <label for="name" class="col-md-3 col-form-label">Nama Pasien
                                 :</label>
-                            <div class="col-md-8">
+                            <div class="col-md-9">
                                 <div class="form-control-wrap">
                                     <input type="text" class="form-control" id="name" name="name"
                                         placeholder="Masukkan nama pasien" required>
@@ -931,18 +777,18 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="age" class="col-md-4 col-form-label">Umur Pasien
+                            <label for="age" class="col-md-3 col-form-label">Umur Pasien
                                 :</label>
-                            <div class="col-md-8">
+                            <div class="col-md-9">
                                 <div class="form-control-wrap">
-                                    <input type="number" class="form-control" id="age" name="age"
+                                    <input type="text" class="form-control" id="age" name="age"
                                         placeholder="Masukkan umur pasien" required>
                                 </div>
                             </div>
                         </div>
 
                         <div class="form-group row gy-4">
-                            <label class="col-md-4 col-form-label">Jenis Kelamin :</label>
+                            <label class="col-md-3 col-form-label">Jenis Kelamin :</label>
                             <div class="col-md-4 col-sm-6">
                                 <div class="preview-block">
                                     <div class="custom-control custom-control-sm custom-radio">
@@ -963,9 +809,9 @@
                             </div>
                         </div>
                         <div class="form-group row mt-3">
-                            <label for="add_address" class="col-md-4 col-form-label">Alamat Pasien
+                            <label for="add_address" class="col-md-3 col-form-label">Alamat Pasien
                                 :</label>
-                            <div class="col-md-8">
+                            <div class="col-md-9">
                                 <div class="form-control-wrap">
                                     <textarea type="text" class="form-control" id="add_address" name="address" placeholder="Masukkan alamat pasien"
                                         required></textarea>
@@ -974,40 +820,86 @@
                         </div>
                         <h5 class="my-3">Hasil Pemeriksaan</h5>
                         <div class="form-group row">
-                            <label for="add_blood_pressure" class="col-md-4 col-form-label">Tekanan darah :</label>
-                            <div class="col-md-8">
-                                <div class="form-control-wrap">
-                                    <input type="text" class="form-control" id="add_blood_pressure"
-                                        name="blood_pressure" placeholder="Masukkan tekanan darah pasien" required>
+                            <label for="systolic_blood_pressure" class="col-md-3 col-form-label">Tekanan darah :</label>
+                            <div class="col-md-9">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="systolic_blood_pressure"
+                                        id="systolic_blood_pressure" placeholder="Sistolik">
+                                    <div class="input-group-prepend input-group-append">
+                                        <span class="input-group-text">/</span>
+                                    </div>
+                                    <input type="text" class="form-control" name="diastolic_blood_pressure"
+                                        id="diastolic_blood_pressure" placeholder="Diastolik">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">mmHg</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
+                        <div class="form-group row gy-4">
+                            <label class="col-md-3 col-form-label">Jenis gula darah :</label>
+                            <div class="col-md-4 col-sm-6">
+                                <div class="preview-block">
+                                    <div class="custom-control custom-control-sm custom-radio">
+                                        <input type="radio" id="blood_glucose_type1" name="blood_glucose_type"
+                                            value="GDS" class="custom-control-input">
+                                        <label class="custom-control-label" for="blood_glucose_type1">GDS</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-6">
+                                <div class="preview-block">
+                                    <div class="custom-control custom-control-sm custom-radio">
+                                        <input type="radio" id="blood_glucose_type2" name="blood_glucose_type"
+                                            value="GDP" class="custom-control-input">
+                                        <label class="custom-control-label" for="blood_glucose_type2">GDP</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="form-group row">
-                            <label for="add_blood_glucose" class="col-md-4 col-form-label">Gula
+                            <label for="add_blood_glucose" class="col-md-3 col-form-label">Gula
                                 darah :</label>
-                            <div class="col-md-8">
+                            <div class="col-md-9">
                                 <div class="form-control-wrap">
-                                    <input type="text" class="form-control" id="add_blood_glucose"
-                                        name="blood_glucose" placeholder="Masukkan gula darah pasien" required>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="add_blood_glucose"
+                                            name="blood_glucose" placeholder="Masukkan gula darah pasien">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">mg/dL</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="add_uric_acid" class="col-md-4 col-form-label">Asam urat
+                            <label for="add_uric_acid" class="col-md-3 col-form-label">Asam urat
                                 :</label>
-                            <div class="col-md-8">
+                            <div class="col-md-9">
                                 <div class="form-control-wrap">
-                                    <input type="text" class="form-control" id="add_uric_acid" name="uric_acid"
-                                        placeholder="Masukkan asam urat pasien" required>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="add_uric_acid" name="uric_acid"
+                                            placeholder="Masukkan asam urat pasien">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">mg/dL</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="add_cholesterol" class="col-md-4 col-form-label">Kolesterol :</label>
-                            <div class="col-md-8">
+                            <label for="add_cholesterol" class="col-md-3 col-form-label">Kolesterol :</label>
+                            <div class="col-md-9">
                                 <div class="form-control-wrap">
-                                    <input type="text" class="form-control" id="add_cholesterol" name="cholesterol"
-                                        placeholder="Masukkan kolesterol pasien" required>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="add_cholesterol"
+                                            name="cholesterol" placeholder="Masukkan kolesterol pasien">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">mg/dL</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -1837,7 +1837,7 @@ progress {
 }
 
 .table-primary {
-  --bs-table-bg: #ddebfe;
+  --bs-table-bg: #f2ebff;
   --bs-table-striped-bg: #d2dff1;
   --bs-table-striped-color: #000;
   --bs-table-active-bg: #c7d4e5;
@@ -1845,7 +1845,7 @@ progress {
   --bs-table-hover-bg: #ccd9eb;
   --bs-table-hover-color: #000;
   color: #000;
-  border-color: #c7d4e5;
+  border-color: #f2ebff;
 }
 
 .table-secondary {
