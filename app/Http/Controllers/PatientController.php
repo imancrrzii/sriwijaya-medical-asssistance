@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Patient;
 use Carbon\Carbon;
+use App\Models\Patient;
 use Illuminate\Http\Request;
+use App\Events\NewPatientEvent;
 use Illuminate\Support\Facades\Auth;
 
 class PatientController extends Controller
@@ -59,7 +60,18 @@ class PatientController extends Controller
 
         $data['table_number'] = $this->getTableNumberFromRole($role);
 
-        Patient::create($data);
+        $patient = Patient::create($data);
+
+        $message = 'Pasien baru telah ditambahkan di meja ' . $data['table_number'];
+        $dataSent = [
+            'id' => $patient->id,
+            'name' =>$patient->name,
+            'age' => $patient->age,
+            'table_number' => $patient->table_number,
+            'is_printed' => false
+        ];
+
+        event(new NewPatientEvent($message, $dataSent));
 
         return back()->with('success', "Data pasien berhasil ditambahkan");
     }

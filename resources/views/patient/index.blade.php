@@ -145,6 +145,46 @@
                 });
         }
     </script>
+    {{-- Pusher for realtime data --}}
+    @can('admin-monitoring-all')
+        <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+        <script>
+            var pusher = new Pusher('2f6606044f30e3d2114a', {
+                cluster: 'ap1'
+            });
+
+            var channel = pusher.subscribe('my-channel');
+            channel.bind('my-event', function(response) {
+                NioApp.Toast(response.message, 'info', {
+                    position: 'top-right',
+                    timeOut: 0,
+                });
+
+                let tableNumber = response.data.table_number;
+                let tbody = document.getElementById('tbody-' + tableNumber);
+                let newRow = document.createElement('tr');
+
+                newRow.innerHTML = `
+                    <td class="text-center">${tbody.childElementCount + 1}</td>
+                    <td>${response.data.name}</td>
+                    <td class="text-center">${response.data.age}</td>
+                    <td class="text-center">
+                        <button class="btn btn-primary btn-xs rounded-pill btn-dim"
+                            data-bs-toggle="modal" data-bs-target="#showPatientModal"
+                            data-id="${response.data.id}">
+                            <em class="icon ni ni-eye-fill"></em>
+                        </button>
+                        <button onclick="printAndPreview('${response.data.id}')"
+                            class="btn ${response.data.is_printed ? 'btn-dark' : 'btn-danger'} btn-primary btn-xs rounded-pill btn-dim">
+                            <em class="icon ni ni-printer-fill"></em>
+                        </button>
+                    </td>
+                `;
+
+                tbody.appendChild(newRow);
+            });
+        </script>
+    @endcan
 @endpush
 
 @section('content')
@@ -173,7 +213,7 @@
                                                 <th class="text-center no-export col-1">Aksi</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody id="tbody-1">
                                             @foreach ($patient1 as $index => $patient)
                                                 <tr>
                                                     <td class="text-center">{{ $index + 1 }}</td>
@@ -220,7 +260,7 @@
                                                 <th class="text-center no-export col-1">Aksi</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody id="tbody-2">
                                             @foreach ($patient2 as $index => $patient)
                                                 <tr>
                                                     <td class="text-center">{{ $index + 1 }}</td>
@@ -267,7 +307,7 @@
                                                 <th class="text-center no-export col-1">Aksi</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody id="tbody-3">
                                             @foreach ($patient3 as $index => $patient)
                                                 <tr>
                                                     <td class="text-center">{{ $index + 1 }}</td>
