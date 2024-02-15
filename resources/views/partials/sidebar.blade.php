@@ -27,22 +27,12 @@
                             </a>
                         </li>
                     @endcan
-                    @can('admin-table')
-                        <li class="nk-menu-item">
-                            <a href="{{ route('patient.index', substr(Auth::user()->role, -1)) }}" class="nk-menu-link">
-                                <span class="nk-menu-icon"><em class="icon ni ni-plus-medi-fill"></em></span>
-                                <span class="nk-menu-text">Pasien</span>
-                            </a>
-                        </li>
-                    @endcan
-                    @can('admin-monitoring-all')
-                        <li class="nk-menu-item has-sub">
-                            <a href="{{ route('patient.index') }}" class="nk-menu-link">
-                                <span class="nk-menu-icon"><em class="icon ni ni-plus-medi-fill"></em></span>
-                                <span class="nk-menu-text">Pasien</span>
-                            </a>
-                        </li>
-                    @endcan
+                    <li class="nk-menu-item has-sub">
+                        <a href="{{ route('patient.index') }}" class="nk-menu-link">
+                            <span class="nk-menu-icon"><em class="icon ni ni-plus-medi-fill"></em></span>
+                            <span class="nk-menu-text">Pasien</span>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>

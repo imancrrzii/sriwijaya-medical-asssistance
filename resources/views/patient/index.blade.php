@@ -5,6 +5,7 @@
     <script src="{{ asset('assets/js/example-toastr.js?ver=3.0.3') }}"></script>
     <script>
         $(document).ready(function() {
+            // Fill input fields with patient data on edit modal
             $(document).on('show.bs.modal', '#editPatientModal', function(event) {
                 const button = $(event.relatedTarget);
                 const id = button.data('id');
@@ -36,14 +37,14 @@
                 form.attr('action', '{{ route('patient.update', ':id') }}'.replace(':id', id));
             });
 
+            // Fill input fields with patient data on show modal
             $(document).on('show.bs.modal', '#showPatientModal', function(event) {
                 const button = $(event.relatedTarget);
                 const id = button.data('id');
                 const modal = $(this);
                 const form = modal.find('#editForm');
-                const printLink = modal.find('.print'); // Ambil tautan cetak
+                const printLink = modal.find('.print');
 
-                // Atur href untuk tautan cetak
                 printLink.attr('href', '{{ route('patient.print', ':id') }}'.replace(':id', id));
 
                 $.getJSON('{{ route('patient.get', ':id') }}'.replace(':id', id), function(data) {
@@ -66,6 +67,8 @@
                         '-');
                 });
             });
+
+            // Remove dashes from input fields after submit
             $('#editForm').submit(function() {
                 $('.remove-dash').each(function() {
                     var inputValue = $(this).val();
@@ -73,8 +76,7 @@
                 });
             });
 
-
-
+            // Fill input fields with patient data on delete modal
             $(document).on('show.bs.modal', '#deletePatientModal', async function(event) {
                 const button = $(event.relatedTarget);
                 const id = button.data('id');
@@ -97,10 +99,8 @@
 
                 form.attr('action', '{{ route('patient.delete', ':id') }}'.replace(':id', id));
             });
-        });
-    </script>
-    <script>
-        $(document).ready(function() {
+
+            // Make datatable scrollable
             $('.datatable-wrap').each(function(index) {
                 const id = 'datatable-' + index;
                 $(this).attr('id', id);
@@ -110,7 +110,17 @@
                 datatableWrap.children().appendTo(wrappingDiv);
                 datatableWrap.append(wrappingDiv);
             });
+
+            // Toastr
+            @if (session()->has('success'))
+                let message = @json(session('success'));
+                NioApp.Toast(`<h5>Berhasil</h5><p>${message}</p>`, 'success', {
+                    position: 'top-right',
+                });
+            @endif
         });
+
+        // Print patient data
         function printAndPreview(id) {
             fetch(`{{ route('patient.print', ':id') }}`.replace(':id', id), {
                     method: 'POST',
@@ -135,14 +145,6 @@
                 });
         }
     </script>
-    @if (session()->has('success'))
-        <script>
-            let message = @json(session('success'));
-            NioApp.Toast(`<h5>Berhasil</h5><p>${message}</p>`, 'success', {
-                position: 'top-right',
-            });
-        </script>
-    @endif
 @endpush
 
 @section('content')
@@ -157,13 +159,6 @@
                             </div>
                             <div class="card card-bordered card-preview">
                                 <div class="card-inner">
-                                    @can('admin-table')
-                                        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal"
-                                            data-bs-target="#addPatientModal" data-modal-title="Tambah Pasien">
-                                            <span class="ni ni-plus"></span>
-                                            <span class="ms-1">Tambah pasien</span>
-                                        </button>
-                                    @endcan
                                     <table
                                         class="datatable-init-export nk-tb-list nk-tb-ulist table table-hover table-bordered table-responsive-md"
                                         data-export-title="Export" data-auto-responsive="false">
@@ -190,23 +185,10 @@
                                                             data-id="{{ $patient->id }}">
                                                             <em class="icon ni ni-eye-fill"></em>
                                                         </button>
-                                                        @can('admin-table')
-                                                            <button class="btn btn-warning btn-xs rounded-pill btn-dim"
-                                                                data-bs-toggle="modal" data-bs-target="#editPatientModal"
-                                                                data-modal-title="Edit Konseptor" data-id="{{ $patient->id }}">
-                                                                <em class="icon ni ni-edit-fill"></em>
-                                                            </button>
-                                                            <button class="btn btn-danger btn-xs rounded-pill btn-dim"
-                                                                data-bs-toggle="modal" data-bs-target="#deletePatientModal"
-                                                                data-id="{{ $patient->id }}">
-                                                                <em class="icon ni ni-trash-fill"></em>
-                                                            </button>
-                                                        @endcan
-                                                        @can('admin-monitoring-all')
-                                                            <button
-                                                                onclick="printAndPreview({{ $patient->id }})"class="btn {{ $patient->is_printed ? 'btn-dark' : 'btn-danger' }} btn-primary btn-xs rounded-pill btn-dim"><em
-                                                                    class="icon ni ni-printer-fill"></em></button>
-                                                        @endcan
+                                                        <button onclick="printAndPreview('{{ $patient->id }}')"
+                                                            class="btn {{ $patient->is_printed ? 'btn-dark' : 'btn-danger' }} btn-primary btn-xs rounded-pill btn-dim">
+                                                            <em class="icon ni ni-printer-fill"></em>
+                                                        </button>
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -224,13 +206,6 @@
                             </div>
                             <div class="card card-bordered card-preview">
                                 <div class="card-inner">
-                                    @can('admin-table')
-                                        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal"
-                                            data-bs-target="#addPatientModal" data-modal-title="Tambah Pasien">
-                                            <span class="ni ni-plus"></span>
-                                            <span class="ms-1">Tambah pasien</span>
-                                        </button>
-                                    @endcan
                                     <table
                                         class="datatable-init-export nk-tb-list nk-tb-ulist table table-hover table-bordered table-responsive-md"
                                         data-export-title="Export" data-auto-responsive="false">
@@ -257,23 +232,10 @@
                                                             data-id="{{ $patient->id }}">
                                                             <em class="icon ni ni-eye-fill"></em>
                                                         </button>
-                                                        @can('admin-table')
-                                                            <button class="btn btn-warning btn-xs rounded-pill btn-dim"
-                                                                data-bs-toggle="modal" data-bs-target="#editPatientModal"
-                                                                data-modal-title="Edit Konseptor" data-id="{{ $patient->id }}">
-                                                                <em class="icon ni ni-edit-fill"></em>
-                                                            </button>
-                                                            <button class="btn btn-danger btn-xs rounded-pill btn-dim"
-                                                                data-bs-toggle="modal" data-bs-target="#deletePatientModal"
-                                                                data-id="{{ $patient->id }}">
-                                                                <em class="icon ni ni-trash-fill"></em>
-                                                            </button>
-                                                        @endcan
-                                                        @can('admin-monitoring-all')
-                                                            <button
-                                                                onclick="printAndPreview({{ $patient->id }})"class="btn {{ $patient->is_printed ? 'btn-dark' : 'btn-danger' }} btn-primary btn-xs rounded-pill btn-dim"><em
-                                                                    class="icon ni ni-printer-fill"></em></button>
-                                                        @endcan
+                                                        <button onclick="printAndPreview('{{ $patient->id }}')"
+                                                            class="btn {{ $patient->is_printed ? 'btn-dark' : 'btn-danger' }} btn-primary btn-xs rounded-pill btn-dim">
+                                                            <em class="icon ni ni-printer-fill"></em>
+                                                        </button>
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -291,13 +253,6 @@
                             </div>
                             <div class="card card-bordered card-preview">
                                 <div class="card-inner">
-                                    @can('admin-table')
-                                        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal"
-                                            data-bs-target="#addPatientModal" data-modal-title="Tambah Pasien">
-                                            <span class="ni ni-plus"></span>
-                                            <span class="ms-1">Tambah pasien</span>
-                                        </button>
-                                    @endcan
                                     <table
                                         class="datatable-init-export nk-tb-list nk-tb-ulist table table-hover table-bordered table-responsive-md"
                                         data-export-title="Export" data-auto-responsive="false">
@@ -324,23 +279,10 @@
                                                             data-id="{{ $patient->id }}">
                                                             <em class="icon ni ni-eye-fill"></em>
                                                         </button>
-                                                        @can('admin-table')
-                                                            <button class="btn btn-warning btn-xs rounded-pill btn-dim"
-                                                                data-bs-toggle="modal" data-bs-target="#editPatientModal"
-                                                                data-modal-title="Edit Konseptor" data-id="{{ $patient->id }}">
-                                                                <em class="icon ni ni-edit-fill"></em>
-                                                            </button>
-                                                            <button class="btn btn-danger btn-xs rounded-pill btn-dim"
-                                                                data-bs-toggle="modal" data-bs-target="#deletePatientModal"
-                                                                data-id="{{ $patient->id }}">
-                                                                <em class="icon ni ni-trash-fill"></em>
-                                                            </button>
-                                                        @endcan
-                                                        @can('admin-monitoring-all')
-                                                            <button
-                                                                onclick="printAndPreview({{ $patient->id }})"class="btn {{ $patient->is_printed ? 'btn-dark' : 'btn-danger' }} btn-primary btn-xs rounded-pill btn-dim"><em
-                                                                    class="icon ni ni-printer-fill"></em></button>
-                                                        @endcan
+                                                        <button onclick="printAndPreview('{{ $patient->id }}')"
+                                                            class="btn {{ $patient->is_printed ? 'btn-dark' : 'btn-danger' }} btn-primary btn-xs rounded-pill btn-dim">
+                                                            <em class="icon ni ni-printer-fill"></em>
+                                                        </button>
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -364,6 +306,7 @@
             </ul>
         </div>
     @endif
+
     @can('admin-table')
         <div class="components-preview wide-xl mx-auto">
             <div class="nk-block nk-block-lg">
@@ -371,13 +314,11 @@
                 </div>
                 <div class="card card-bordered card-preview">
                     <div class="card-inner">
-                        @can('admin-table')
-                            <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal"
-                                data-bs-target="#addPatientModal" data-modal-title="Tambah Pasien">
-                                <span class="ni ni-plus"></span>
-                                <span class="ms-1">Tambah pasien</span>
-                            </button>
-                        @endcan
+                        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal"
+                            data-bs-target="#addPatientModal" data-modal-title="Tambah Pasien">
+                            <span class="ni ni-plus"></span>
+                            <span class="ms-1">Tambah pasien</span>
+                        </button>
                         <table
                             class="datatable-init-export nk-tb-list nk-tb-ulist table table-hover table-bordered table-responsive-md"
                             data-export-title="Export" data-auto-responsive="false">
@@ -400,25 +341,15 @@
                                                 data-bs-target="#showPatientModal" data-id="{{ $patient->id }}">
                                                 <em class="icon ni ni-eye-fill"></em>
                                             </button>
-                                            @can('admin-table')
-                                                <button class="btn btn-warning btn-xs rounded-pill btn-dim" data-bs-toggle="modal"
-                                                    data-bs-target="#editPatientModal" data-modal-title="Edit Konseptor"
-                                                    data-id="{{ $patient->id }}">
-                                                    <em class="icon ni ni-edit-fill"></em>
-                                                </button>
-                                                <button class="btn btn-danger btn-xs rounded-pill btn-dim" data-bs-toggle="modal"
-                                                    data-bs-target="#deletePatientModal" data-id="{{ $patient->id }}">
-                                                    <em class="icon ni ni-trash-fill"></em>
-                                                </button>
-                                            @endcan
-                                            @can('admin-monitoring-all')
-                                                <button
-                                                    class="btn  {{ $patient->is_printed ? 'btn-dark' : 'btn-danger' }} btn-xs rounded-pill btn-dim "
-                                                    data-bs-toggle="modal" data-bs-target="#printPatientModal"
-                                                    data-id="{{ $patient->id }}">
-                                                    <em class="icon ni ni-printer-fill"></em>
-                                                </button>
-                                            @endcan
+                                            <button class="btn btn-warning btn-xs rounded-pill btn-dim" data-bs-toggle="modal"
+                                                data-bs-target="#editPatientModal" data-modal-title="Edit Konseptor"
+                                                data-id="{{ $patient->id }}">
+                                                <em class="icon ni ni-edit-fill"></em>
+                                            </button>
+                                            <button class="btn btn-danger btn-xs rounded-pill btn-dim" data-bs-toggle="modal"
+                                                data-bs-target="#deletePatientModal" data-id="{{ $patient->id }}">
+                                                <em class="icon ni ni-trash-fill"></em>
+                                            </button>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -470,8 +401,8 @@
                             <div class="col-md-4 col-sm-6">
                                 <div class="preview-block">
                                     <div class="custom-control custom-control-sm custom-radio">
-                                        <input type="radio" id="customRadio1" name="gender" value="Laki-laki" required
-                                            class="custom-control-input">
+                                        <input type="radio" id="customRadio1" name="gender" value="Laki-laki"
+                                            required class="custom-control-input">
                                         <label class="custom-control-label" for="customRadio1">Laki-laki</label>
                                     </div>
                                 </div>
@@ -479,8 +410,8 @@
                             <div class="col-md-4 col-sm-6">
                                 <div class="preview-block">
                                     <div class="custom-control custom-control-sm custom-radio">
-                                        <input type="radio" id="customRadio2" name="gender" value="Perempuan" required
-                                            class="custom-control-input">
+                                        <input type="radio" id="customRadio2" name="gender" value="Perempuan"
+                                            required class="custom-control-input">
                                         <label class="custom-control-label" for="customRadio2">Perempuan</label>
                                     </div>
                                 </div>
@@ -631,8 +562,8 @@
                             <div class="col-md-4 col-sm-6">
                                 <div class="preview-block">
                                     <div class="custom-control custom-control-sm custom-radio">
-                                        <input type="radio" id="editCustomRadio1" name="gender" value="Laki-laki" required
-                                            class="custom-control-input">
+                                        <input type="radio" id="editCustomRadio1" name="gender" value="Laki-laki"
+                                            required class="custom-control-input">
                                         <label class="custom-control-label" for="editCustomRadio1">Laki-laki</label>
                                     </div>
                                 </div>
@@ -640,8 +571,8 @@
                             <div class="col-md-4 col-sm-6">
                                 <div class="preview-block">
                                     <div class="custom-control custom-control-sm custom-radio">
-                                        <input type="radio" id="editCustomRadio2" name="gender" value="Perempuan" required
-                                            class="custom-control-input">
+                                        <input type="radio" id="editCustomRadio2" name="gender" value="Perempuan"
+                                            required class="custom-control-input">
                                         <label class="custom-control-label" for="editCustomRadio2">Perempuan</label>
                                     </div>
                                 </div>

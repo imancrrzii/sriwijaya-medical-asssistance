@@ -6,7 +6,6 @@ use App\Models\Patient;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Gate;
 
 class PatientController extends Controller
 {
@@ -64,11 +63,6 @@ class PatientController extends Controller
 
         return back()->with('success', "Data pasien berhasil ditambahkan");
     }
-    public function show($id)
-    {
-        $patient = Patient::findOrFail($id);
-        return view('patient.index', compact('patients'));
-    }
 
     public function update(Request $request, $id)
     {
@@ -85,14 +79,10 @@ class PatientController extends Controller
             'cholesterol' => 'nullable|numeric',
         ]);
 
-        $role = Auth::user()->role;
-
-        $data['table_number'] = $this->getTableNumberFromRole($role);
-
         $patient = Patient::findOrFail($id);
         $patient->update($data);
 
-        return redirect()->route('patient.index', ['tableNumber' => $data['table_number']])->with('success', "Data pasien berhasil diperbarui");
+        return redirect()->route('patient.index')->with('success', "Data pasien berhasil diperbarui");
 
     }
 

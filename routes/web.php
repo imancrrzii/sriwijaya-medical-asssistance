@@ -19,12 +19,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return redirect()->route('dashboard.index');
+    return redirect()->route('patient.index');
 });
 
 Route::middleware('guest')->group(function () {
-    Route::get('login', [AuthController::class, 'index']);
-    Route::post('login', [AuthController::class, 'login'])->name('login');
+    Route::get('/login', [AuthController::class, 'index']);
+    Route::post('/login', [AuthController::class, 'login'])->name('login');
 
     // Reset password
     Route::get('/forgot-password', [ResetPasswordController::class, 'forgotView'])->name('forgot.view');
@@ -34,22 +34,13 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('logout', [AuthController::class, 'logout'])->name('logout');
-    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
-    // Route::get('patient/table-{tableNumber}', [PatientController::class, 'index'])
-    //     ->middleware(['auth', 'can:admin-table'])
-    //     ->name('patient.index.table');
-
-    // Route::get('patient', [PatientController::class, 'index'])->middleware(['auth', 'can:admin-monitoring-all'])
-    //     ->name('patient.index');
-
-    Route::get('patient', [PatientController::class, 'index'])->name('patient.index');
-
-
+    Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+    
     // Patient
-    Route::post('patient', [PatientController::class, 'store'])->name('patient.store');
-    Route::get('patient/{id}', [PatientController::class, 'getPatient'])->name('patient.get');
-    Route::post('/patient/{id}/show', [PatientController::class, 'show'])->name('patient.show');
+    Route::get('/patient', [PatientController::class, 'index'])->name('patient.index');
+    Route::post('/patient', [PatientController::class, 'store'])->name('patient.store');
+    Route::get('/patient/{id}', [PatientController::class, 'getPatient'])->name('patient.get');
     Route::post('/patient/{id}/update', [PatientController::class, 'update'])->name('patient.update');
     Route::delete('patient/{id}/delete', [PatientController::class, 'delete'])->name('patient.delete');
     Route::post('/patient/print/{id}', [PatientController::class, 'printPatient'])->name('patient.print');
