@@ -161,14 +161,15 @@
                 });
 
                 let tableNumber = response.data.table_number;
-                let tbody = document.getElementById('tbody-' + tableNumber);
-                let newRow = document.createElement('tr');
+                let dataTable = $(`#patient-table-${tableNumber}`).DataTable();
 
-                newRow.innerHTML = `
-                    <td class="text-center">${tbody.childElementCount + 1}</td>
-                    <td>${response.data.name}</td>
-                    <td class="text-center">${response.data.age}</td>
-                    <td class="text-center">
+                $(`#patient-table-${tableNumber} tbody tr.dataTables_empty`).remove();
+
+                dataTable.row.add([
+                    `<td class="text-center">${dataTable.rows().count() + 1}</td>`,
+                    `<td>${response.data.name}</td>`,
+                    `<td class="text-center">${response.data.age}</td>`,
+                    `<td class="text-center">
                         <button class="btn btn-primary btn-xs rounded-pill btn-dim"
                             data-bs-toggle="modal" data-bs-target="#showPatientModal"
                             data-id="${response.data.id}">
@@ -178,10 +179,18 @@
                             class="btn ${response.data.is_printed ? 'btn-dark' : 'btn-danger'} btn-primary btn-xs rounded-pill btn-dim">
                             <em class="icon ni ni-printer-fill"></em>
                         </button>
-                    </td>
-                `;
+                    </td>`
+                ]).draw();
 
-                tbody.appendChild(newRow);
+                dataTable.column(0).nodes().each(function(cell, i) {
+                    cell.innerHTML = i + 1;
+                });
+
+                dataTable.draw().columns().every(function(index) {
+                    if (index !== 1) {
+                        this.nodes().to$().addClass('text-center');
+                    }
+                });
             });
         </script>
     @endcan
@@ -201,7 +210,7 @@
                                 <div class="card-inner">
                                     <table
                                         class="datatable-init-export nk-tb-list nk-tb-ulist table table-hover table-bordered table-responsive-md"
-                                        data-export-title="Export" data-auto-responsive="false">
+                                        data-export-title="Export" data-auto-responsive="false" id="patient-table-1">
                                         <thead>
                                             <tr class="table-light">
                                                 <th class="text-center" colspan="4">Meja 1</th>
@@ -248,7 +257,7 @@
                                 <div class="card-inner">
                                     <table
                                         class="datatable-init-export nk-tb-list nk-tb-ulist table table-hover table-bordered table-responsive-md"
-                                        data-export-title="Export" data-auto-responsive="false">
+                                        data-export-title="Export" data-auto-responsive="false" id="patient-table-2">
                                         <thead>
                                             <tr class="table-light">
                                                 <th class="text-center" colspan="4">Meja 2</th>
@@ -295,7 +304,7 @@
                                 <div class="card-inner">
                                     <table
                                         class="datatable-init-export nk-tb-list nk-tb-ulist table table-hover table-bordered table-responsive-md"
-                                        data-export-title="Export" data-auto-responsive="false">
+                                        data-export-title="Export" data-auto-responsive="false" id="patient-table-3">
                                         <thead>
                                             <tr class="table-light">
                                                 <th class="text-center" colspan="4">Meja 3</th>
@@ -313,7 +322,7 @@
                                                     <td class="text-center">{{ $index + 1 }}</td>
                                                     <td>{{ $patient->name }}</td>
                                                     <td class="text-center">{{ $patient->age }}</td>
-                                                    <td class="text-center nowrap">
+                                                    <td class="text-center">
                                                         <button class="btn btn-primary btn-xs rounded-pill btn-dim"
                                                             data-bs-toggle="modal" data-bs-target="#showPatientModal"
                                                             data-id="{{ $patient->id }}">
