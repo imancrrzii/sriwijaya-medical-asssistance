@@ -53,12 +53,7 @@
                                                 name="password" placeholder="Masukkan password anda">
                                         </div>
                                     </div>
-                                    <div class="form-group d-flex justify-between">
-                                        <div class="custom-control custom-control-sm custom-checkbox checked">
-                                            <input type="checkbox" class="custom-control-input" id="remember"
-                                                name="remember">
-                                            <label class="custom-control-label" for="remember">Ingat saya</label>
-                                        </div>
+                                    <div class="form-group d-flex justify-end">
                                         <a href="{{ route('forgot.view') }}" class="link link-primary link-sm">Lupa
                                             password?</a>
                                     </div>

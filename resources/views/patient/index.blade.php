@@ -149,7 +149,7 @@
     @can('admin-monitoring-all')
         <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
         <script>
-            var pusher = new Pusher('2f6606044f30e3d2114a', {
+            var pusher = new Pusher('10d74ebf78b84195e080', {
                 cluster: 'ap1'
             });
 
