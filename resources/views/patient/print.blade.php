@@ -168,11 +168,6 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>Kolesterol</td>
-                    <td>:</td>
-                    <td>&lt;200 mg/dL</td>
-                </tr>
-                <tr>
                     <td>Asam Urat</td>
                     <td>:</td>
                     <td>
@@ -181,6 +176,11 @@
                             <li>Perempuan: 1.9 – 6 mg/dL</li>
                         </ul>
                     </td>
+                </tr>
+                <tr>
+                    <td>Kolesterol</td>
+                    <td>:</td>
+                    <td>&lt;200 mg/dL</td>
                 </tr>
             </tbody>
         </table>

@@ -65,7 +65,7 @@ class PatientController extends Controller
         $message = 'Pasien baru telah ditambahkan di meja ' . $data['table_number'];
         $dataSent = [
             'id' => $patient->id,
-            'name' =>$patient->name,
+            'name' => $patient->name,
             'age' => $patient->age,
             'table_number' => $patient->table_number,
             'is_printed' => false
@@ -109,56 +109,56 @@ class PatientController extends Controller
     {
         $patient = Patient::findOrFail($id);
         $patient->update(['is_printed' => true]);
-    
+
         $this->normalizeIntegerProperties($patient);
-    
+
         $patient->blood_pressure_level = $this->getBloodPressureLevel($patient->systolic_blood_pressure);
         $patient->blood_glucose_level = $this->getBloodGlucoseLevel($patient->blood_glucose, $patient->blood_glucose_type);
         $patient->uric_acid_level = $this->getUricAcidLevel($patient->uric_acid, $patient->gender);
         $patient->cholesterol_level = $this->getCholesterolLevel($patient->cholesterol);
-    
+
         return view('patient.print')->with('patient', $patient);
     }
 
     public function getPatient($id)
     {
         $patient = Patient::find($id);
-    
+
         $this->normalizeIntegerProperties($patient);
-    
+
         return response()->json($patient);
     }
-    
+
     private function normalizeIntegerProperties($patient)
     {
         $properties = ['systolic_blood_pressure', 'diastolic_blood_pressure', 'blood_glucose', 'uric_acid', 'cholesterol'];
-    
+
         foreach ($properties as $property) {
             if ($patient->$property) {
-                $patient->$property = intval($patient->$property);
+                $patient->$property = ($patient->$property == intval($patient->$property)) ? intval($patient->$property) : floatval($patient->$property);
             }
         }
     }
-    
+
     private function getBloodPressureLevel($systolicPressure)
     {
         return $systolicPressure > 120 ? 'Tinggi' : ($systolicPressure > 90 && $systolicPressure <= 120 ? 'Normal' : 'Rendah');
     }
-    
+
     private function getBloodGlucoseLevel($bloodGlucose, $type)
     {
         $threshold = ($type == 'GDP') ? 126 : 200;
         return $bloodGlucose >= $threshold ? 'Tinggi' : ($bloodGlucose > 60 && $bloodGlucose < $threshold ? 'Normal' : 'Rendah');
     }
-    
+
     private function getUricAcidLevel($uricAcid, $gender)
     {
         $thresholdHigh = ($gender == 'Perempuan') ? 6 : 7.2;
         $thresholdNormal = ($gender == 'Perempuan') ? 1.9 : 2.5;
-    
+
         return $uricAcid > $thresholdHigh ? 'Tinggi' : ($uricAcid > $thresholdNormal && $uricAcid <= $thresholdHigh ? 'Normal' : 'Rendah');
     }
-    
+
     private function getCholesterolLevel($cholesterol)
     {
         return $cholesterol >= 200 ? 'Tinggi' : 'Normal';
