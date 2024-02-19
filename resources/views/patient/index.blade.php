@@ -201,7 +201,7 @@
     @can('admin-monitoring-all')
         <div class="col-md-12">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="components-preview wide-xl mx-auto mb-4">
                         <div class="nk-block nk-block-lg">
                             <div class="nk-block-head">
@@ -248,7 +248,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="components-preview wide-xl mx-auto mb-4">
                         <div class="nk-block nk-block-lg">
                             <div class="nk-block-head">
@@ -295,7 +295,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="components-preview wide-xl mx-auto mb-4">
                         <div class="nk-block nk-block-lg">
                             <div class="nk-block-head">
@@ -318,6 +318,53 @@
                                         </thead>
                                         <tbody id="tbody-3">
                                             @foreach ($patient3 as $index => $patient)
+                                                <tr>
+                                                    <td class="text-center">{{ $index + 1 }}</td>
+                                                    <td>{{ $patient->name }}</td>
+                                                    <td class="text-center">{{ $patient->age }}</td>
+                                                    <td class="text-center">
+                                                        <button class="btn btn-primary btn-xs rounded-pill btn-dim"
+                                                            data-bs-toggle="modal" data-bs-target="#showPatientModal"
+                                                            data-id="{{ $patient->id }}">
+                                                            <em class="icon ni ni-eye-fill"></em>
+                                                        </button>
+                                                        <button onclick="printAndPreview('{{ $patient->id }}')"
+                                                            class="btn {{ $patient->is_printed ? 'btn-dark' : 'btn-danger' }} btn-primary btn-xs rounded-pill btn-dim">
+                                                            <em class="icon ni ni-printer-fill"></em>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="components-preview wide-xl mx-auto mb-4">
+                        <div class="nk-block nk-block-lg">
+                            <div class="nk-block-head">
+                            </div>
+                            <div class="card card-bordered card-preview">
+                                <div class="card-inner">
+                                    <table
+                                        class="datatable-init-export nk-tb-list nk-tb-ulist table table-hover table-bordered table-responsive-md"
+                                        data-export-title="Export" data-auto-responsive="false" id="patient-table-3">
+                                        <thead>
+                                            <tr class="table-light">
+                                                <th class="text-center" colspan="4">Meja 4</th>
+                                            </tr>
+                                            <tr class="table-white">
+                                                <th class="text-center col-1">No</th>
+                                                <th class="text-center col-1">Nama</th>
+                                                <th class="text-center col-1">Usia</th>
+                                                <th class="text-center no-export col-1">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbody-3">
+                                            @foreach ($patient4 as $index => $patient)
                                                 <tr>
                                                     <td class="text-center">{{ $index + 1 }}</td>
                                                     <td>{{ $patient->name }}</td>
