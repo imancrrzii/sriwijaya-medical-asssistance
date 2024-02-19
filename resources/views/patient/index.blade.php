@@ -430,7 +430,7 @@
                             <div class="col-md-9">
                                 <div class="form-control-wrap">
                                     <input type="text" class="form-control" id="add_name" name="name"
-                                        placeholder="Masukkan nama pasien" required>
+                                        placeholder="Masukkan nama pasien" autocomplete="off" autocomplete="off" required>
                                 </div>
                             </div>
                         </div>
@@ -440,7 +440,7 @@
                             <div class="col-md-9">
                                 <div class="form-control-wrap">
                                     <input type="number" class="form-control" id="add_age" name="age"
-                                        placeholder="Masukkan umur pasien" required>
+                                        placeholder="Masukkan umur pasien" autocomplete="off" autocomplete="off" required>
                                 </div>
                             </div>
                         </div>
@@ -451,7 +451,7 @@
                                 <div class="preview-block">
                                     <div class="custom-control custom-control-sm custom-radio">
                                         <input type="radio" id="customRadio1" name="gender" value="Laki-laki"
-                                            required class="custom-control-input">
+                                            autocomplete="off" required class="custom-control-input">
                                         <label class="custom-control-label" for="customRadio1">Laki-laki</label>
                                     </div>
                                 </div>
@@ -460,7 +460,7 @@
                                 <div class="preview-block">
                                     <div class="custom-control custom-control-sm custom-radio">
                                         <input type="radio" id="customRadio2" name="gender" value="Perempuan"
-                                            required class="custom-control-input">
+                                            autocomplete="off" required class="custom-control-input">
                                         <label class="custom-control-label" for="customRadio2">Perempuan</label>
                                     </div>
                                 </div>
@@ -472,8 +472,8 @@
                                 :</label>
                             <div class="col-md-9">
                                 <div class="form-control-wrap">
-                                    <textarea type="text" class="form-control" id="add_address" name="address" placeholder="Masukkan alamat pasien"
-                                        required></textarea>
+                                    <textarea type="text" class="form-control" id="add_address" name="address" placeholder="Masukkan alamat pasien" autocomplete="off"
+                                        autocomplete="off" required></textarea>
                                 </div>
                             </div>
                         </div>
@@ -483,12 +483,12 @@
                             <div class="col-md-9">
                                 <div class="input-group">
                                     <input type="number" class="form-control" name="systolic_blood_pressure"
-                                        id="systolic_blood_pressure" placeholder="Sistolik">
+                                        id="systolic_blood_pressure" placeholder="Sistolik" autocomplete="off">
                                     <div class="input-group-prepend input-group-append">
                                         <span class="input-group-text">/</span>
                                     </div>
                                     <input type="number" class="form-control" name="diastolic_blood_pressure"
-                                        id="diastolic_blood_pressure" placeholder="Diastolik">
+                                        id="diastolic_blood_pressure" placeholder="Diastolik" autocomplete="off">
                                     <div class="input-group-append">
                                         <span class="input-group-text">mmHg</span>
                                     </div>
@@ -501,7 +501,7 @@
                             <div class="col-md-4 col-sm-6">
                                 <div class="preview-block">
                                     <div class="custom-control custom-control-sm custom-radio">
-                                        <input type="radio" id="blood_glucose_type1" name="blood_glucose_type" required
+                                        <input type="radio" id="blood_glucose_type1" name="blood_glucose_type" autocomplete="off" required
                                             value="GDS" class="custom-control-input">
                                         <label class="custom-control-label" for="blood_glucose_type1">GDS</label>
                                     </div>
@@ -510,7 +510,7 @@
                             <div class="col-md-4 col-sm-6">
                                 <div class="preview-block">
                                     <div class="custom-control custom-control-sm custom-radio">
-                                        <input type="radio" id="blood_glucose_type2" name="blood_glucose_type" required
+                                        <input type="radio" id="blood_glucose_type2" name="blood_glucose_type" autocomplete="off" required
                                             value="GDP" class="custom-control-input">
                                         <label class="custom-control-label" for="blood_glucose_type2">GDP</label>
                                     </div>
@@ -525,7 +525,7 @@
                                 <div class="form-control-wrap">
                                     <div class="input-group">
                                         <input type="number" class="form-control" id="add_blood_glucose"
-                                            name="blood_glucose" placeholder="Masukkan gula darah pasien">
+                                            name="blood_glucose" placeholder="Masukkan gula darah pasien" autocomplete="off">
                                         <div class="input-group-append">
                                             <span class="input-group-text">mg/dL</span>
                                         </div>
@@ -540,7 +540,7 @@
                                 <div class="form-control-wrap">
                                     <div class="input-group">
                                         <input type="number" class="form-control" id="add_uric_acid" name="uric_acid"
-                                            placeholder="Masukkan asam urat pasien">
+                                            placeholder="Masukkan asam urat pasien" autocomplete="off">
                                         <div class="input-group-append">
                                             <span class="input-group-text">mg/dL</span>
                                         </div>
@@ -554,7 +554,7 @@
                                 <div class="form-control-wrap">
                                     <div class="input-group">
                                         <input type="number" class="form-control" id="add_cholesterol"
-                                            name="cholesterol" placeholder="Masukkan kolesterol pasien">
+                                            name="cholesterol" placeholder="Masukkan kolesterol pasien" autocomplete="off">
                                         <div class="input-group-append">
                                             <span class="input-group-text">mg/dL</span>
                                         </div>
@@ -591,7 +591,7 @@
                             <div class="col-md-9">
                                 <div class="form-control-wrap">
                                     <input type="text" class="form-control" id="name" name="name"
-                                        placeholder="Masukkan nama pasien" required>
+                                        placeholder="Masukkan nama pasien" autocomplete="off" required>
                                 </div>
                             </div>
                         </div>
@@ -601,7 +601,7 @@
                             <div class="col-md-9">
                                 <div class="form-control-wrap">
                                     <input type="number" class="form-control" id="age" name="age"
-                                        placeholder="Masukkan umur pasien" required>
+                                        placeholder="Masukkan umur pasien" autocomplete="off" required>
                                 </div>
                             </div>
                         </div>
@@ -612,7 +612,7 @@
                                 <div class="preview-block">
                                     <div class="custom-control custom-control-sm custom-radio">
                                         <input type="radio" id="editCustomRadio1" name="gender" value="Laki-laki"
-                                            required class="custom-control-input">
+                                            autocomplete="off" required class="custom-control-input">
                                         <label class="custom-control-label" for="editCustomRadio1">Laki-laki</label>
                                     </div>
                                 </div>
@@ -621,7 +621,7 @@
                                 <div class="preview-block">
                                     <div class="custom-control custom-control-sm custom-radio">
                                         <input type="radio" id="editCustomRadio2" name="gender" value="Perempuan"
-                                            required class="custom-control-input">
+                                            autocomplete="off" required class="custom-control-input">
                                         <label class="custom-control-label" for="editCustomRadio2">Perempuan</label>
                                     </div>
                                 </div>
@@ -633,7 +633,7 @@
                             <div class="col-md-9">
                                 <div class="form-control-wrap">
                                     <textarea type="text" class="form-control" id="add_address" name="address" placeholder="Masukkan alamat pasien"
-                                        required></textarea>
+                                        autocomplete="off" required></textarea>
                                 </div>
                             </div>
                         </div>
@@ -643,13 +643,13 @@
                             <div class="col-md-9">
                                 <div class="input-group">
                                     <input type="text" class="form-control remove-dash" name="systolic_blood_pressure"
-                                        id="systolic_blood_pressure" placeholder="Sistolik">
+                                        id="systolic_blood_pressure" placeholder="Sistolik" autocomplete="off">
                                     <div class="input-group-prepend input-group-append">
                                         <span class="input-group-text">/</span>
                                     </div>
                                     <input type="text" class="form-control remove-dash"
                                         name="diastolic_blood_pressure" id="diastolic_blood_pressure"
-                                        placeholder="Diastolik">
+                                        placeholder="Diastolik" autocomplete="off">
                                     <div class="input-group-append">
                                         <span class="input-group-text">mmHg</span>
                                     </div>
@@ -662,7 +662,7 @@
                             <div class="col-md-4 col-sm-6">
                                 <div class="preview-block">
                                     <div class="custom-control custom-control-sm custom-radio">
-                                        <input type="radio" id="blood_glucose_type1" name="blood_glucose_type" required
+                                        <input type="radio" id="blood_glucose_type1" name="blood_glucose_type" autocomplete="off" required
                                             value="GDS" class="custom-control-input">
                                         <label class="custom-control-label" for="blood_glucose_type1">GDS</label>
                                     </div>
@@ -671,7 +671,7 @@
                             <div class="col-md-4 col-sm-6">
                                 <div class="preview-block">
                                     <div class="custom-control custom-control-sm custom-radio">
-                                        <input type="radio" id="blood_glucose_type2" name="blood_glucose_type" required
+                                        <input type="radio" id="blood_glucose_type2" name="blood_glucose_type" autocomplete="off" required
                                             value="GDP" class="custom-control-input">
                                         <label class="custom-control-label" for="blood_glucose_type2">GDP</label>
                                     </div>
@@ -686,7 +686,7 @@
                                 <div class="form-control-wrap">
                                     <div class="input-group">
                                         <input type="text" class="form-control remove-dash" id="add_blood_glucose"
-                                            name="blood_glucose" placeholder="Masukkan gula darah pasien">
+                                            name="blood_glucose" placeholder="Masukkan gula darah pasien" autocomplete="off">
                                         <div class="input-group-append">
                                             <span class="input-group-text">mg/dL</span>
                                         </div>
@@ -701,7 +701,7 @@
                                 <div class="form-control-wrap">
                                     <div class="input-group">
                                         <input type="text" class="form-control remove-dash" id="add_uric_acid"
-                                            name="uric_acid" placeholder="Masukkan asam urat pasien">
+                                            name="uric_acid" placeholder="Masukkan asam urat pasien" autocomplete="off">
                                         <div class="input-group-append">
                                             <span class="input-group-text">mg/dL</span>
                                         </div>
@@ -715,7 +715,7 @@
                                 <div class="form-control-wrap">
                                     <div class="input-group">
                                         <input type="text" class="form-control remove-dash" id="add_cholesterol"
-                                            name="cholesterol" placeholder="Masukkan kolesterol pasien">
+                                            name="cholesterol" placeholder="Masukkan kolesterol pasien" autocomplete="off">
                                         <div class="input-group-append">
                                             <span class="input-group-text">mg/dL</span>
                                         </div>
@@ -752,7 +752,7 @@
                             <div class="col-md-9">
                                 <div class="form-control-wrap">
                                     <input type="text" class="form-control" id="name" name="name"
-                                        placeholder="Masukkan nama pasien" required>
+                                        placeholder="Masukkan nama pasien" autocomplete="off" required>
                                 </div>
                             </div>
                         </div>
@@ -762,7 +762,7 @@
                             <div class="col-md-9">
                                 <div class="form-control-wrap">
                                     <input type="text" class="form-control" id="age" name="age"
-                                        placeholder="Masukkan umur pasien" required>
+                                        placeholder="Masukkan umur pasien" autocomplete="off" required>
                                 </div>
                             </div>
                         </div>
@@ -773,7 +773,7 @@
                                 <div class="preview-block">
                                     <div class="custom-control custom-control-sm custom-radio">
                                         <input type="radio" id="editCustomRadio1" name="gender" value="Laki-laki"
-                                            class="custom-control-input">
+                                            class="custom-control-input" autocomplete="off">
                                         <label class="custom-control-label" for="editCustomRadio1">Laki-laki</label>
                                     </div>
                                 </div>
@@ -782,7 +782,7 @@
                                 <div class="preview-block">
                                     <div class="custom-control custom-control-sm custom-radio">
                                         <input type="radio" id="editCustomRadio2" name="gender" value="Perempuan"
-                                            class="custom-control-input">
+                                            class="custom-control-input" autocomplete="off">
                                         <label class="custom-control-label" for="editCustomRadio2">Perempuan</label>
                                     </div>
                                 </div>
@@ -794,7 +794,7 @@
                             <div class="col-md-9">
                                 <div class="form-control-wrap">
                                     <textarea type="text" class="form-control" id="add_address" name="address" placeholder="Masukkan alamat pasien"
-                                        required></textarea>
+                                        autocomplete="off" required></textarea>
                                 </div>
                             </div>
                         </div>
@@ -805,11 +805,11 @@
                                 <div class="input-group">
                                     <input type="text" class="form-control" name="systolic_blood_pressure"
                                         id="systolic_blood_pressure" placeholder="Sistolik">
-                                    <div class="input-group-prepend input-group-append">
+                                    <div class="input-group-prepend input-group-append" autocomplete="off">
                                         <span class="input-group-text">/</span>
                                     </div>
                                     <input type="text" class="form-control" name="diastolic_blood_pressure"
-                                        id="diastolic_blood_pressure" placeholder="Diastolik">
+                                        id="diastolic_blood_pressure" placeholder="Diastolik" autocomplete="off">
                                     <div class="input-group-append">
                                         <span class="input-group-text">mmHg</span>
                                     </div>
@@ -823,7 +823,7 @@
                                 <div class="preview-block">
                                     <div class="custom-control custom-control-sm custom-radio">
                                         <input type="radio" id="blood_glucose_type1" name="blood_glucose_type"
-                                            value="GDS" class="custom-control-input">
+                                            value="GDS" class="custom-control-input" autocomplete="off">
                                         <label class="custom-control-label" for="blood_glucose_type1">GDS</label>
                                     </div>
                                 </div>
@@ -832,7 +832,7 @@
                                 <div class="preview-block">
                                     <div class="custom-control custom-control-sm custom-radio">
                                         <input type="radio" id="blood_glucose_type2" name="blood_glucose_type"
-                                            value="GDP" class="custom-control-input">
+                                            value="GDP" class="custom-control-input" autocomplete="off">
                                         <label class="custom-control-label" for="blood_glucose_type2">GDP</label>
                                     </div>
                                 </div>
@@ -846,7 +846,7 @@
                                 <div class="form-control-wrap">
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="add_blood_glucose"
-                                            name="blood_glucose" placeholder="Masukkan gula darah pasien">
+                                            name="blood_glucose" placeholder="Masukkan gula darah pasien" autocomplete="off">
                                         <div class="input-group-append">
                                             <span class="input-group-text">mg/dL</span>
                                         </div>
@@ -861,7 +861,7 @@
                                 <div class="form-control-wrap">
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="add_uric_acid" name="uric_acid"
-                                            placeholder="Masukkan asam urat pasien">
+                                            placeholder="Masukkan asam urat pasien" autocomplete="off">
                                         <div class="input-group-append">
                                             <span class="input-group-text">mg/dL</span>
                                         </div>
@@ -875,7 +875,7 @@
                                 <div class="form-control-wrap">
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="add_cholesterol"
-                                            name="cholesterol" placeholder="Masukkan kolesterol pasien">
+                                            name="cholesterol" placeholder="Masukkan kolesterol pasien" autocomplete="off">
                                         <div class="input-group-append">
                                             <span class="input-group-text">mg/dL</span>
                                         </div>
