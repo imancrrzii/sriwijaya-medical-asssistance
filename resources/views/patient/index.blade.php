@@ -228,14 +228,19 @@
                                                     <td class="text-center">{{ $index + 1 }}</td>
                                                     <td>{{ $patient->name }}</td>
                                                     <td class="text-center">{{ $patient->age }}</td>
-                                                    <td class="text-center">
+                                                    <td class="text-center text-nowrap align-middle">
                                                         <button class="btn btn-primary btn-xs rounded-pill btn-dim"
                                                             data-bs-toggle="modal" data-bs-target="#showPatientModal"
                                                             data-id="{{ $patient->id }}">
                                                             <em class="icon ni ni-eye-fill"></em>
                                                         </button>
+                                                        <button class="btn btn-danger btn-xs rounded-pill btn-dim"
+                                                            data-bs-toggle="modal" data-bs-target="#deletePatientModal"
+                                                            data-id="{{ $patient->id }}">
+                                                            <em class="icon ni ni-trash-fill"></em>
+                                                        </button>
                                                         <button onclick="printAndPreview('{{ $patient->id }}')"
-                                                            class="btn {{ $patient->is_printed ? 'btn-dark' : 'btn-danger' }} btn-primary btn-xs rounded-pill btn-dim">
+                                                            class="btn {{ $patient->is_printed ? 'btn-dark' : 'btn-warning' }} btn-primary btn-xs rounded-pill btn-dim">
                                                             <em class="icon ni ni-printer-fill"></em>
                                                         </button>
                                                     </td>
@@ -275,14 +280,19 @@
                                                     <td class="text-center">{{ $index + 1 }}</td>
                                                     <td>{{ $patient->name }}</td>
                                                     <td class="text-center">{{ $patient->age }}</td>
-                                                    <td class="text-center">
+                                                    <td class="text-center text-nowrap align-middle">
                                                         <button class="btn btn-primary btn-xs rounded-pill btn-dim"
                                                             data-bs-toggle="modal" data-bs-target="#showPatientModal"
                                                             data-id="{{ $patient->id }}">
                                                             <em class="icon ni ni-eye-fill"></em>
                                                         </button>
+                                                        <button class="btn btn-danger btn-xs rounded-pill btn-dim"
+                                                        data-bs-toggle="modal" data-bs-target="#deletePatientModal"
+                                                        data-id="{{ $patient->id }}">
+                                                        <em class="icon ni ni-trash-fill"></em>
+                                                    </button>
                                                         <button onclick="printAndPreview('{{ $patient->id }}')"
-                                                            class="btn {{ $patient->is_printed ? 'btn-dark' : 'btn-danger' }} btn-primary btn-xs rounded-pill btn-dim">
+                                                            class="btn {{ $patient->is_printed ? 'btn-dark' : 'btn-warning' }} btn-primary btn-xs rounded-pill btn-dim">
                                                             <em class="icon ni ni-printer-fill"></em>
                                                         </button>
                                                     </td>
@@ -322,14 +332,19 @@
                                                     <td class="text-center">{{ $index + 1 }}</td>
                                                     <td>{{ $patient->name }}</td>
                                                     <td class="text-center">{{ $patient->age }}</td>
-                                                    <td class="text-center">
+                                                    <td class="text-center text-nowrap align-middle">
                                                         <button class="btn btn-primary btn-xs rounded-pill btn-dim"
                                                             data-bs-toggle="modal" data-bs-target="#showPatientModal"
                                                             data-id="{{ $patient->id }}">
                                                             <em class="icon ni ni-eye-fill"></em>
                                                         </button>
+                                                        <button class="btn btn-danger btn-xs rounded-pill btn-dim"
+                                                        data-bs-toggle="modal" data-bs-target="#deletePatientModal"
+                                                        data-id="{{ $patient->id }}">
+                                                        <em class="icon ni ni-trash-fill"></em>
+                                                    </button>
                                                         <button onclick="printAndPreview('{{ $patient->id }}')"
-                                                            class="btn {{ $patient->is_printed ? 'btn-dark' : 'btn-danger' }} btn-primary btn-xs rounded-pill btn-dim">
+                                                            class="btn {{ $patient->is_printed ? 'btn-dark' : 'btn-warning' }} btn-primary btn-xs rounded-pill btn-dim">
                                                             <em class="icon ni ni-printer-fill"></em>
                                                         </button>
                                                     </td>
@@ -369,14 +384,19 @@
                                                     <td class="text-center">{{ $index + 1 }}</td>
                                                     <td>{{ $patient->name }}</td>
                                                     <td class="text-center">{{ $patient->age }}</td>
-                                                    <td class="text-center">
+                                                    <td class="text-center text-nowrap align-middle">
                                                         <button class="btn btn-primary btn-xs rounded-pill btn-dim"
                                                             data-bs-toggle="modal" data-bs-target="#showPatientModal"
                                                             data-id="{{ $patient->id }}">
                                                             <em class="icon ni ni-eye-fill"></em>
                                                         </button>
+                                                        <button class="btn btn-danger btn-xs rounded-pill btn-dim"
+                                                            data-bs-toggle="modal" data-bs-target="#deletePatientModal"
+                                                            data-id="{{ $patient->id }}">
+                                                            <em class="icon ni ni-trash-fill"></em>
+                                                        </button>
                                                         <button onclick="printAndPreview('{{ $patient->id }}')"
-                                                            class="btn {{ $patient->is_printed ? 'btn-dark' : 'btn-danger' }} btn-primary btn-xs rounded-pill btn-dim">
+                                                            class="btn {{ $patient->is_printed ? 'btn-dark' : 'btn-warning' }} btn-primary btn-xs rounded-pill btn-dim">
                                                             <em class="icon ni ni-printer-fill"></em>
                                                         </button>
                                                     </td>
@@ -477,7 +497,8 @@
                             <div class="col-md-9">
                                 <div class="form-control-wrap">
                                     <input type="text" class="form-control" id="add_name" name="name"
-                                        placeholder="Masukkan nama pasien" autocomplete="off" autocomplete="off" required>
+                                        placeholder="Masukkan nama pasien" autocomplete="off" autocomplete="off"
+                                        required>
                                 </div>
                             </div>
                         </div>
@@ -487,7 +508,8 @@
                             <div class="col-md-9">
                                 <div class="form-control-wrap">
                                     <input type="number" class="form-control" id="add_age" name="age"
-                                        placeholder="Masukkan umur pasien" autocomplete="off" autocomplete="off" required>
+                                        placeholder="Masukkan umur pasien" autocomplete="off" autocomplete="off"
+                                        required>
                                 </div>
                             </div>
                         </div>
@@ -519,8 +541,8 @@
                                 :</label>
                             <div class="col-md-9">
                                 <div class="form-control-wrap">
-                                    <textarea type="text" class="form-control" id="add_address" name="address" placeholder="Masukkan alamat pasien" autocomplete="off"
-                                        autocomplete="off" required></textarea>
+                                    <textarea type="text" class="form-control" id="add_address" name="address" placeholder="Masukkan alamat pasien"
+                                        autocomplete="off" autocomplete="off" required></textarea>
                                 </div>
                             </div>
                         </div>
@@ -548,8 +570,8 @@
                             <div class="col-md-4 col-sm-6">
                                 <div class="preview-block">
                                     <div class="custom-control custom-control-sm custom-radio">
-                                        <input type="radio" id="blood_glucose_type1" name="blood_glucose_type" autocomplete="off" required
-                                            value="GDS" class="custom-control-input">
+                                        <input type="radio" id="blood_glucose_type1" name="blood_glucose_type"
+                                            autocomplete="off" required value="GDS" class="custom-control-input">
                                         <label class="custom-control-label" for="blood_glucose_type1">GDS</label>
                                     </div>
                                 </div>
@@ -557,8 +579,8 @@
                             <div class="col-md-4 col-sm-6">
                                 <div class="preview-block">
                                     <div class="custom-control custom-control-sm custom-radio">
-                                        <input type="radio" id="blood_glucose_type2" name="blood_glucose_type" autocomplete="off" required
-                                            value="GDP" class="custom-control-input">
+                                        <input type="radio" id="blood_glucose_type2" name="blood_glucose_type"
+                                            autocomplete="off" required value="GDP" class="custom-control-input">
                                         <label class="custom-control-label" for="blood_glucose_type2">GDP</label>
                                     </div>
                                 </div>
@@ -572,7 +594,8 @@
                                 <div class="form-control-wrap">
                                     <div class="input-group">
                                         <input type="number" class="form-control" id="add_blood_glucose"
-                                            name="blood_glucose" placeholder="Masukkan gula darah pasien" autocomplete="off">
+                                            name="blood_glucose" placeholder="Masukkan gula darah pasien"
+                                            autocomplete="off">
                                         <div class="input-group-append">
                                             <span class="input-group-text">mg/dL</span>
                                         </div>
@@ -601,7 +624,8 @@
                                 <div class="form-control-wrap">
                                     <div class="input-group">
                                         <input type="number" class="form-control" id="add_cholesterol"
-                                            name="cholesterol" placeholder="Masukkan kolesterol pasien" autocomplete="off">
+                                            name="cholesterol" placeholder="Masukkan kolesterol pasien"
+                                            autocomplete="off">
                                         <div class="input-group-append">
                                             <span class="input-group-text">mg/dL</span>
                                         </div>
@@ -709,8 +733,8 @@
                             <div class="col-md-4 col-sm-6">
                                 <div class="preview-block">
                                     <div class="custom-control custom-control-sm custom-radio">
-                                        <input type="radio" id="blood_glucose_type1" name="blood_glucose_type" autocomplete="off" required
-                                            value="GDS" class="custom-control-input">
+                                        <input type="radio" id="blood_glucose_type1" name="blood_glucose_type"
+                                            autocomplete="off" required value="GDS" class="custom-control-input">
                                         <label class="custom-control-label" for="blood_glucose_type1">GDS</label>
                                     </div>
                                 </div>
@@ -718,8 +742,8 @@
                             <div class="col-md-4 col-sm-6">
                                 <div class="preview-block">
                                     <div class="custom-control custom-control-sm custom-radio">
-                                        <input type="radio" id="blood_glucose_type2" name="blood_glucose_type" autocomplete="off" required
-                                            value="GDP" class="custom-control-input">
+                                        <input type="radio" id="blood_glucose_type2" name="blood_glucose_type"
+                                            autocomplete="off" required value="GDP" class="custom-control-input">
                                         <label class="custom-control-label" for="blood_glucose_type2">GDP</label>
                                     </div>
                                 </div>
@@ -733,7 +757,8 @@
                                 <div class="form-control-wrap">
                                     <div class="input-group">
                                         <input type="text" class="form-control remove-dash" id="add_blood_glucose"
-                                            name="blood_glucose" placeholder="Masukkan gula darah pasien" autocomplete="off">
+                                            name="blood_glucose" placeholder="Masukkan gula darah pasien"
+                                            autocomplete="off">
                                         <div class="input-group-append">
                                             <span class="input-group-text">mg/dL</span>
                                         </div>
@@ -762,7 +787,8 @@
                                 <div class="form-control-wrap">
                                     <div class="input-group">
                                         <input type="text" class="form-control remove-dash" id="add_cholesterol"
-                                            name="cholesterol" placeholder="Masukkan kolesterol pasien" autocomplete="off">
+                                            name="cholesterol" placeholder="Masukkan kolesterol pasien"
+                                            autocomplete="off">
                                         <div class="input-group-append">
                                             <span class="input-group-text">mg/dL</span>
                                         </div>
@@ -893,7 +919,8 @@
                                 <div class="form-control-wrap">
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="add_blood_glucose"
-                                            name="blood_glucose" placeholder="Masukkan gula darah pasien" autocomplete="off">
+                                            name="blood_glucose" placeholder="Masukkan gula darah pasien"
+                                            autocomplete="off">
                                         <div class="input-group-append">
                                             <span class="input-group-text">mg/dL</span>
                                         </div>
@@ -922,7 +949,8 @@
                                 <div class="form-control-wrap">
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="add_cholesterol"
-                                            name="cholesterol" placeholder="Masukkan kolesterol pasien" autocomplete="off">
+                                            name="cholesterol" placeholder="Masukkan kolesterol pasien"
+                                            autocomplete="off">
                                         <div class="input-group-append">
                                             <span class="input-group-text">mg/dL</span>
                                         </div>
