@@ -75,7 +75,7 @@
         <br>FAKULTAS KEDOKTERAN
         <br>UNIVERSITAS SRIWIJAYA
     </p>
-    <p class="centered"><em class="instagram-icon bi bi-instagram"></em>tmbsriwijaya</p>
+    <p class="centered"><em class="instagram-icon bi bi-instagram"></em>tbmsriwijaya</p>
     <!-- Date and Time -->
     <div style="display: flex; justify-content: space-between;">
         <span style="text-align: right; font-size: 10px; text-transform: uppercase">DATE: {{ now()->format('d M Y') }}</span>
