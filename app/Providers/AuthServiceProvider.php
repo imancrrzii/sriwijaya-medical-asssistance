@@ -35,6 +35,9 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('admin-monitoring-all', function (User $user) {
             return $user->role == 'Admin Monitoring All';
         });
+        Gate::define('admin-monitoring-data', function (User $user) {
+            return $user->role == 'Admin Monitoring Data';
+        });
         Gate::define('admin-table-1-monitoring-all', function (User $user) {
             return $user->role == 'Admin Table 1' || $user->role == 'Admin Monitoring All';
         });

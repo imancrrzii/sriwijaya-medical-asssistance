@@ -413,6 +413,221 @@
         </div>
     @endcan
 
+    @can('admin-monitoring-data')
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="components-preview wide-xl mx-auto mb-4">
+                    <div class="nk-block nk-block-lg">
+                        <div class="nk-block-head">
+                        </div>
+                        <div class="card card-bordered card-preview">
+                            <div class="card-inner">
+                                <table
+                                    class="datatable-init-export nk-tb-list nk-tb-ulist table table-hover table-bordered table-responsive-md"
+                                    data-export-title="Export" data-auto-responsive="false" id="patient-table-1">
+                                    <thead>
+                                        <tr class="table-light">
+                                            <th class="text-center" colspan="4">Meja 1</th>
+                                        </tr>
+                                        <tr class="table-white">
+                                            <th class="text-center col-1">No</th>
+                                            <th class="text-center col-1">Nama</th>
+                                            <th class="text-center col-1">Usia</th>
+                                            <th class="text-center no-export col-1">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbody-1">
+                                        @foreach ($patientData1 as $index => $patient)
+                                            <tr>
+                                                <td class="text-center">{{ $index + 1 }}</td>
+                                                <td>{{ $patient->name }}</td>
+                                                <td class="text-center">{{ $patient->age }}</td>
+                                                <td class="text-center text-nowrap align-middle">
+                                                    <button class="btn btn-primary btn-xs rounded-pill btn-dim"
+                                                        data-bs-toggle="modal" data-bs-target="#showPatientModal"
+                                                        data-id="{{ $patient->id }}">
+                                                        <em class="icon ni ni-eye-fill"></em>
+                                                    </button>
+                                                    <button class="btn btn-danger btn-xs rounded-pill btn-dim"
+                                                        data-bs-toggle="modal" data-bs-target="#deletePatientModal"
+                                                        data-id="{{ $patient->id }}">
+                                                        <em class="icon ni ni-trash-fill"></em>
+                                                    </button>
+                                                    <button onclick="printAndPreview('{{ $patient->id }}')"
+                                                        class="btn {{ $patient->is_printed ? 'btn-dark' : 'btn-warning' }} btn-primary btn-xs rounded-pill btn-dim">
+                                                        <em class="icon ni ni-printer-fill"></em>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="components-preview wide-xl mx-auto mb-4">
+                    <div class="nk-block nk-block-lg">
+                        <div class="nk-block-head">
+                        </div>
+                        <div class="card card-bordered card-preview">
+                            <div class="card-inner">
+                                <table
+                                    class="datatable-init-export nk-tb-list nk-tb-ulist table table-hover table-bordered table-responsive-md"
+                                    data-export-title="Export" data-auto-responsive="false" id="patient-table-2">
+                                    <thead>
+                                        <tr class="table-light">
+                                            <th class="text-center" colspan="4">Meja 2</th>
+                                        </tr>
+                                        <tr class="table-white">
+                                            <th class="text-center col-1">No</th>
+                                            <th class="text-center col-1">Nama</th>
+                                            <th class="text-center col-1">Usia</th>
+                                            <th class="text-center no-export col-1">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbody-2">
+                                        @foreach ($patientData2 as $index => $patient)
+                                            <tr>
+                                                <td class="text-center">{{ $index + 1 }}</td>
+                                                <td>{{ $patient->name }}</td>
+                                                <td class="text-center">{{ $patient->age }}</td>
+                                                <td class="text-center text-nowrap align-middle">
+                                                    <button class="btn btn-primary btn-xs rounded-pill btn-dim"
+                                                        data-bs-toggle="modal" data-bs-target="#showPatientModal"
+                                                        data-id="{{ $patient->id }}">
+                                                        <em class="icon ni ni-eye-fill"></em>
+                                                    </button>
+                                                    <button class="btn btn-danger btn-xs rounded-pill btn-dim"
+                                                    data-bs-toggle="modal" data-bs-target="#deletePatientModal"
+                                                    data-id="{{ $patient->id }}">
+                                                    <em class="icon ni ni-trash-fill"></em>
+                                                </button>
+                                                    <button onclick="printAndPreview('{{ $patient->id }}')"
+                                                        class="btn {{ $patient->is_printed ? 'btn-dark' : 'btn-warning' }} btn-primary btn-xs rounded-pill btn-dim">
+                                                        <em class="icon ni ni-printer-fill"></em>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="components-preview wide-xl mx-auto mb-4">
+                    <div class="nk-block nk-block-lg">
+                        <div class="nk-block-head">
+                        </div>
+                        <div class="card card-bordered card-preview">
+                            <div class="card-inner">
+                                <table
+                                    class="datatable-init-export nk-tb-list nk-tb-ulist table table-hover table-bordered table-responsive-md"
+                                    data-export-title="Export" data-auto-responsive="false" id="patient-table-3">
+                                    <thead>
+                                        <tr class="table-light">
+                                            <th class="text-center" colspan="4">Meja 3</th>
+                                        </tr>
+                                        <tr class="table-white">
+                                            <th class="text-center col-1">No</th>
+                                            <th class="text-center col-1">Nama</th>
+                                            <th class="text-center col-1">Usia</th>
+                                            <th class="text-center no-export col-1">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbody-3">
+                                        @foreach ($patientData3 as $index => $patient)
+                                            <tr>
+                                                <td class="text-center">{{ $index + 1 }}</td>
+                                                <td>{{ $patient->name }}</td>
+                                                <td class="text-center">{{ $patient->age }}</td>
+                                                <td class="text-center text-nowrap align-middle">
+                                                    <button class="btn btn-primary btn-xs rounded-pill btn-dim"
+                                                        data-bs-toggle="modal" data-bs-target="#showPatientModal"
+                                                        data-id="{{ $patient->id }}">
+                                                        <em class="icon ni ni-eye-fill"></em>
+                                                    </button>
+                                                    <button class="btn btn-danger btn-xs rounded-pill btn-dim"
+                                                    data-bs-toggle="modal" data-bs-target="#deletePatientModal"
+                                                    data-id="{{ $patient->id }}">
+                                                    <em class="icon ni ni-trash-fill"></em>
+                                                </button>
+                                                    <button onclick="printAndPreview('{{ $patient->id }}')"
+                                                        class="btn {{ $patient->is_printed ? 'btn-dark' : 'btn-warning' }} btn-primary btn-xs rounded-pill btn-dim">
+                                                        <em class="icon ni ni-printer-fill"></em>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="components-preview wide-xl mx-auto mb-4">
+                    <div class="nk-block nk-block-lg">
+                        <div class="nk-block-head">
+                        </div>
+                        <div class="card card-bordered card-preview">
+                            <div class="card-inner">
+                                <table
+                                    class="datatable-init-export nk-tb-list nk-tb-ulist table table-hover table-bordered table-responsive-md"
+                                    data-export-title="Export" data-auto-responsive="false" id="patient-table-3">
+                                    <thead>
+                                        <tr class="table-light">
+                                            <th class="text-center" colspan="4">Meja 4</th>
+                                        </tr>
+                                        <tr class="table-white">
+                                            <th class="text-center col-1">No</th>
+                                            <th class="text-center col-1">Nama</th>
+                                            <th class="text-center col-1">Usia</th>
+                                            <th class="text-center no-export col-1">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbody-3">
+                                        @foreach ($patientData4 as $index => $patient)
+                                            <tr>
+                                                <td class="text-center">{{ $index + 1 }}</td>
+                                                <td>{{ $patient->name }}</td>
+                                                <td class="text-center">{{ $patient->age }}</td>
+                                                <td class="text-center text-nowrap align-middle">
+                                                    <button class="btn btn-primary btn-xs rounded-pill btn-dim"
+                                                        data-bs-toggle="modal" data-bs-target="#showPatientModal"
+                                                        data-id="{{ $patient->id }}">
+                                                        <em class="icon ni ni-eye-fill"></em>
+                                                    </button>
+                                                    <button class="btn btn-danger btn-xs rounded-pill btn-dim"
+                                                        data-bs-toggle="modal" data-bs-target="#deletePatientModal"
+                                                        data-id="{{ $patient->id }}">
+                                                        <em class="icon ni ni-trash-fill"></em>
+                                                    </button>
+                                                    <button onclick="printAndPreview('{{ $patient->id }}')"
+                                                        class="btn {{ $patient->is_printed ? 'btn-dark' : 'btn-warning' }} btn-primary btn-xs rounded-pill btn-dim">
+                                                        <em class="icon ni ni-printer-fill"></em>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endcan
+
     @if ($errors->any())
         <div class="alert alert-danger">
             <ul>

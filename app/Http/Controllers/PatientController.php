@@ -23,6 +23,13 @@ class PatientController extends Controller
             $patient3 = Patient::where('table_number', 3)->whereDate('created_at', $today)->get();
             $patient4 = Patient::where('table_number', 4)->whereDate('created_at', $today)->get();
             return view('patient.index', compact('title', 'patient1', 'patient2', 'patient3', 'patient4'));
+        } else if ($userRole === 'Admin Monitoring Data') {
+            $title = 'Data Pasien untuk Admin Monitoring Data';
+            $patientData1 = Patient::where('table_number', 1)->get();
+            $patientData2 = Patient::where('table_number', 2)->get();
+            $patientData3 = Patient::where('table_number', 3)->get();
+            $patientData4 = Patient::where('table_number', 4)->get();
+            return view('patient.index', compact('title', 'patientData1', 'patientData2', 'patientData3', 'patientData4'));
         } else {
             $tableNumber = $this->getTableNumberFromRole($userRole);
             $title = 'Data Pasien Meja ' . $tableNumber;
